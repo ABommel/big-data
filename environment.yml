@@ -1,0 +1,19 @@
+name: big-data
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - bokeh
+  - dask
+  - h5py
+  - matplotlib
+  - pandas
+  - seaborn
+  - numpy
+  - scipy
+  - pyspark
+  - ipykernel
+  - findspark
+  - jupytext
+  - python-graphviz
+  - tqdm
