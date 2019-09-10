@@ -3,6 +3,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - lorem
   - bokeh
   - dask
   - h5py
