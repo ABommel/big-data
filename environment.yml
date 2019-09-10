@@ -17,3 +17,4 @@ dependencies:
   - jupytext
   - python-graphviz
   - tqdm
+  - pytables
