@@ -3,3 +3,6 @@ notebooks/.ipynb_checkpoints/06.ParallelComputation-checkpoint.ipynb
 *.json
 notebooks/.ipynb_checkpoints/07.AsynchronousProcessing-checkpoint.ipynb
 *.h5
+*.swp
+notebooks/.ipynb_checkpoints/08.DaskDelayed-checkpoint.ipynb
+notebooks/mydask.png
