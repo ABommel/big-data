@@ -6,3 +6,4 @@ notebooks/.ipynb_checkpoints/07.AsynchronousProcessing-checkpoint.ipynb
 *.swp
 notebooks/.ipynb_checkpoints/08.DaskDelayed-checkpoint.ipynb
 notebooks/mydask.png
+notebooks/.ipynb_checkpoints/09.DaskBag-checkpoint.ipynb
