@@ -53,7 +53,7 @@ docker run --rm -d -v $HOME/big-data:/home/jovyan/ -p 8888:8888 -p 4040:4040 pna
 ### Blog posts
   * [Don't use Hadoop - your data isn't that big](https://www.chrisstucchio.com/blog/2013/hadoop_hatred.html)
   * [Format Wars: From VHS and Beta to Avro and Parquet](http://www.svds.com/dataformats/)  overview of Hadoop File formats.
-  * [Should you replace Hadoop with your laptop?](http://veekaybee.github.io) by Vicki Boykis.
+  * [Should you replace Hadoop with your laptop?](http://veekaybee.github.io/2017/03/20/hadoop-or-laptop/) by Vicki Boykis.
   * [Implementing MapReduce with multiprocessing](https://pymotw.com/2/multiprocessing/mapreduce.html) by Doug Hellmann.
   * [Deploying Dask on YARN](https://jcrist.github.io/dask-on-yarn) by Jim Crist.
   * [Native Hadoop file system (HDFS) connectivity in Python](http://wesmckinney.com/blog/python-hdfs-interfaces/) by Wes McKinney.
