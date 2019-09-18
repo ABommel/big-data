@@ -9,3 +9,4 @@ notebooks/mydask.png
 notebooks/.ipynb_checkpoints/09.DaskBag-checkpoint.ipynb
 notebooks/.ipynb_checkpoints/02.GitBasics-checkpoint.ipynb
 *.html
+src/.ipynb_checkpoints/01.Installation-checkpoint.py
