@@ -39,6 +39,7 @@ docker run --rm -d -v $HOME/big-data:/home/jovyan/ -p 8888:8888 -p 4040:4040 pna
   - Python
   	   * [Analyzing and Manipulating Data with Pandas Beginner](https://youtu.be/6ohWS7J1hVA): SciPy 2016 Tutorial by Jonathan Rocher.
   - Dask
+      * [Dask Examples](https://examples.dask.org)
       * [Parallel Data Analysis with Dask](https://github.com/TomAugspurger/dask-tutorial-pycon-2018)  Dask tutorial at PyCon 2018 by Tom Augspurger.
   	   * [Parallelizing Scientific Python with Dask](https://www.youtube.com/watch?v=mqdglv9GnM8) SciPy 2018 Tutorial by James Crist and Martin Durant
   	   * [Parallelizing Scientific Python with Dask](https://youtu.be/mbfsog3e5DA), SciPy 2017 Tutorial by James Crist.
