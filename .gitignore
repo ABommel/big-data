@@ -1,12 +1,6 @@
-
-notebooks/.ipynb_checkpoints/06.ParallelComputation-checkpoint.ipynb
+notebooks/.ipynb_checkpoints/
 *.json
-notebooks/.ipynb_checkpoints/07.AsynchronousProcessing-checkpoint.ipynb
 *.h5
 *.swp
-notebooks/.ipynb_checkpoints/08.DaskDelayed-checkpoint.ipynb
 notebooks/mydask.png
-notebooks/.ipynb_checkpoints/09.DaskBag-checkpoint.ipynb
-notebooks/.ipynb_checkpoints/02.GitBasics-checkpoint.ipynb
 *.html
-src/.ipynb_checkpoints/01.Installation-checkpoint.py
