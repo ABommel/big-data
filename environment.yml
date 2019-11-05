@@ -20,4 +20,4 @@ dependencies:
   - tqdm
   - pytables
   - ipywidgets
-  - pyarrow
+  - feather-format
