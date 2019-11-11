@@ -16,7 +16,7 @@ server listening for HTTP connections on port 8888 and 4040 without authenticati
 
 ```
 git clone https://github.com/pnavaro/big-data.git
-docker run --rm -d -v $HOME/big-data:/home/jovyan/ -p 8888:8888 -p 4040:4040 pnavaro/big-data
+docker run --rm -v $PWD/big-data:/home/jovyan/ -p 8888:8888 -p 4040:4040 pnavaro/big-data
 ```
 
 ## References
