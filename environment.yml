@@ -2,6 +2,7 @@ name: big-data
 channels:
   - conda-forge
 dependencies:
+  - pyarrow
   - feather-format
   - bokeh
   - dask

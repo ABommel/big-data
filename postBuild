@@ -1,2 +1,0 @@
-#!/bin/bash
-/opt/conda/envs/big-data/bin/python -m ipykernel --name big-data

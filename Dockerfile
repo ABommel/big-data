@@ -8,8 +8,9 @@ COPY . ${HOME}
 
 RUN chown -R ${NB_USER} ${HOME}
 
-RUN conda env create --quiet -f environment.yml && \
-    conda clean -tipy && \
-    fix-permissions $CONDA_DIR
-
 USER $NB_USER
+
+RUN conda env update -n base --quiet -y -f environment.yml && \
+    conda clean --all -f -y && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
