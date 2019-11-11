@@ -19,3 +19,13 @@ notebooks/example.parquet
 notebooks/nycflights/_common_metadata
 notebooks/nycflights/_metadata
 *.parquet
+notebooks/sample.txt
+notebooks/sample00.txt
+notebooks/sample01.txt
+notebooks/sample02.txt
+notebooks/sample03.txt
+notebooks/sample04.txt
+notebooks/sample05.txt
+notebooks/sample06.txt
+notebooks/sample07.txt
+notebooks/test.feather
