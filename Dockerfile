@@ -9,7 +9,7 @@ COPY . ${HOME}
 RUN chown -R ${NB_USER} ${HOME}
 
 RUN conda env create --quiet -f environment.yml && \
-    conda clean -tipy && conda build purge-all && \
+    conda clean -tipy && \
     fix-permissions $CONDA_DIR
 
 USER $NB_USER
