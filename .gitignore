@@ -36,3 +36,4 @@ notebooks/test.feather
 .local/share/jupyter/runtime/notebook_cookie_secret
 .jupyter/migrated
 big-data/.local/share/jupyter/runtime/notebook_cookie_secret
+.config/dask/dask.yaml
