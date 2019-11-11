@@ -2,6 +2,7 @@ name: big-data
 channels:
   - conda-forge
 dependencies:
-  - pip
-  - pip:
-    - -r requirements.txt
+  - feather-format
+  - bokeh
+  - dask
+  - python-graphviz
