@@ -29,3 +29,8 @@ notebooks/sample05.txt
 notebooks/sample06.txt
 notebooks/sample07.txt
 notebooks/test.feather
+.ipython/profile_default/history.sqlite
+.ipython/profile_default/startup/README
+.local/share/jupyter/nbsignatures.db
+.local/share/jupyter/notebook_secret
+.local/share/jupyter/runtime/notebook_cookie_secret
