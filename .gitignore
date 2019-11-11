@@ -15,3 +15,4 @@ data/nycflights/1996.csv
 data/nycflights/1997.csv
 data/nycflights/1998.csv
 data/nycflights/1999.csv
+notebooks/example.parquet
