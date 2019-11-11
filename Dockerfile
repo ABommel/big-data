@@ -1,6 +1,6 @@
 FROM jupyter/pyspark-notebook
 
-MAINTAINER Pierre Navaro <pierre.navaro@univ-rennes1.fr>
+MAINTAINER Pierre Navaro <navaro@math.cnrs.fr>
 
 USER root
 
