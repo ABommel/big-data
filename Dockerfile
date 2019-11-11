@@ -14,3 +14,6 @@ RUN conda env update -n base --quiet -f environment.yml && \
     conda clean --all -f -y && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
+
+RUN python -m pip uninstall pyarrow --yes && \
+    python -m pip install pyarrow
