@@ -8,9 +8,9 @@
 #       format_version: '1.4'
 #       jupytext_version: 1.2.4
 #   kernelspec:
-#     display_name: big-data
+#     display_name: Python 3
 #     language: python
-#     name: big-data
+#     name: python3
 # ---
 
 # # Hadoop File Formats
@@ -49,21 +49,6 @@ df.head()
 # - statistics stored in metadata allow for skipping unneeded chunks
 # - data partitioning using the directory structure
 
-# ### Read  `parquet` file with Python
-#
-# [fastparquet](http://fastparquet.readthedocs.io/en/latest/) provides a performant library to read and write Parquet files from Python, without any need for a Python-Java bridge. This will make the Parquet format an ideal storage mechanism for Python-based big data workflows.
-#
-# The tabular nature of Parquet is a good fit for the Pandas data-frame objects, and we exclusively deal with data-frame <-> Parquet.
-#
-# We will use a software layer to access the data. For performance reason the data must be aligned in memory along columns. It is not the default in Python. Apache Arrow will do this for you and improve performance.
-#
-# Example:
-# ```py
-# import fastparquet as fp
-# pf = fp.ParquetFile('/user/navaro_p/2016-yellow.parquet', open_with=hdfs.open)
-# pf
-# ```
-
 # ## Apache Arrow
 #
 # [Arrow](https://arrow.apache.org/docs/python/) is a columnar in-memory analytics layer designed to accelerate big data. It houses a set of canonical in-memory representations of flat and hierarchical data along with multiple language-bindings for structure manipulation.
@@ -101,3 +86,5 @@ table2.to_pandas()
 pq.read_table('example.parquet', columns=['one', 'three'])
 
 pq.read_pandas('example.parquet', columns=['two']).to_pandas()
+
+
