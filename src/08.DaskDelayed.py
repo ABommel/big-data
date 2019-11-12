@@ -8,9 +8,9 @@
 #       format_version: '1.4'
 #       jupytext_version: 1.2.4
 #   kernelspec:
-#     display_name: big-data
+#     display_name: Python 3
 #     language: python
-#     name: big-data
+#     name: python3
 # ---
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
@@ -94,6 +94,13 @@ for x in data:
 total = sum(results)
 total
 
+# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# ### Exercise 8.1
+#
+# - Parallelize this by appending the delayed `slowinc` calls to the list `results`.
+# - Display the graph of `total` computation
+# - Compute time elapsed for the computation.
+
 # + {"slideshow": {"slide_type": "fragment"}}
 from dask import delayed
 
@@ -105,22 +112,10 @@ for x in data:
 
 total = delayed(sum)(futures)
 # -
-
-
-
-# %time total.compute()
-
-
-
 total.visualize()
 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
-# ### Exercise 8.1
-#
-# - Parallelize this by appending the delayed `slowinc` calls to the list `results`.
-# - Display the graph of `total` computation
-# - Compute time elapsed for the computation.
+# %time total.compute()
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # # Decorator
@@ -199,6 +194,20 @@ total.visualize()
 #
 # Hint: Read [Delayed Best Practices](http://dask.pydata.org/en/latest/delayed-best-practices.html)
 
+# +
+import os  # library to get directory and file paths
+import tarfile # this module makes possible to read and write tar archives
+
+def extract_data(name, where):
+    datadir = os.path.join(where,name)
+    if not os.path.exists(datadir):
+       print("Extracting data...")
+       tar_path = os.path.join(where, name+'.tgz')
+       with tarfile.open(tar_path, mode='r:gz') as data:
+          data.extractall(where)
+            
+extract_data('daily-stock','../data') # this function call will extract json files
+
 # + {"slideshow": {"slide_type": "fragment"}}
 import os, sys
 from glob import glob
@@ -209,10 +218,9 @@ here = os.getcwd() # get the current directory
 filenames = sorted(glob(os.path.join(here,'..','data', 'daily-stock', '*.json')))
 
 # + {"slideshow": {"slide_type": "slide"}}
-from tqdm import tqdm_notebook as tqdm
+from tqdm.notebook import tqdm 
 
 def read( fn ):
-    
     with open(fn) as f:
         return [json.loads(line) for line in f]
     
@@ -220,19 +228,16 @@ def convert(data):
     df = pd.DataFrame(data)
     
     out_filename = fn[:-5] + '.h5'
-    df.to_hdf(out_filename, '/data')
+    df.to_hdf(out_filename, os.path.join(here,'..','data'))
     return
 
-for fn in tqdm(filenames):
-    
+for fn in tqdm(filenames):  
     data = read( fn)
     convert(data)
     
 # -
 
 # %ls ../data/daily-stock/*.h5
-
-# %rm ../data/daily-stock/*.h5
 
 # +
 @dask.delayed
@@ -256,5 +261,3 @@ for filename in filenames:
 # -
 
 # %time dask.compute(*results)
-
-# %ls ../data/daily-stock/*.h5
