@@ -36,3 +36,6 @@ notebooks/test.feather
 .jupyter/migrated
 big-data/.local/share/jupyter/runtime/notebook_cookie_secret
 .config/dask/dask.yaml
+data/daily-stock/
+.local/share/jupyter/runtime/kernel-7e0ae75d-c545-4208-9151-9d8877260517.json
+.local/share/jupyter/runtime/nbserver-7.json
