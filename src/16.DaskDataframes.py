@@ -9,9 +9,9 @@
 #       format_version: '1.4'
 #       jupytext_version: 1.2.4
 #   kernelspec:
-#     display_name: big-data
+#     display_name: Python 3
 #     language: python
-#     name: big-data
+#     name: python3
 # ---
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
@@ -122,7 +122,7 @@ df.dtypes
 # + {"slideshow": {"slide_type": "slide"}}
 df = dd.read_csv(filename,
                  parse_dates={'Date': [0, 1, 2]},
-                 dtype={'TailNum': str,
+                 dtype={'TailNum': object,
                         'CRSElapsedTime': float,
                         'Cancelled': bool})
 
@@ -188,15 +188,14 @@ df.DepDelay.max().visualize()
 result = df.DepDelay.mean()  # create the tasks graph
 
 # + {"slideshow": {"slide_type": "fragment"}}
-# %%time
-result.compute()           # perform actual computation
+# %time result.compute()           # perform actual computation
 # -
 
 # ## Store Data in Apache Parquet Format
 #
 # Dask encourage dataframe users to store and load data using Parquet instead. [Apache Parquet](http://parquet.apache.org/) is a columnar binary format that is easy to split into multiple files (easier for parallel loading) and is generally much simpler to deal with than HDF5 (from the Dask library’s perspective). It is also a common format used by other big data systems like [Apache Spark](http://spark.apache.org/) and [Apache Impala](http://impala.apache.org/) and so is useful to interchange with other systems.
 
-df.to_parquet("nycflights/")  # save csv files using parquet format
+df.drop("TailNum", axis=1).to_parquet("nycflights/")  # save csv files using parquet format
 
 # It is possible to specify dtypes and compression when converting. This can definitely help give you significantly greater speedups, but just using the default settings will still be a large improvement.
 
@@ -208,8 +207,7 @@ df.head()
 
 result = df.DepDelay.mean() 
 
-# %%time
-result.compute() 
+# %time result.compute() 
 
 # The computation is much faster because pulling out the DepDelay column is  easy for Parquet.
 #
@@ -234,6 +232,17 @@ result.compute()
 # - Use selections `df[...]` to find how many positive (late) and negative (early) departure times there are
 # - In total, how many non-cancelled flights were taken? (To invert a boolean pandas Series s, use ~s).
 #
+# -
+
+df.head(10)
+
+len(df)
+
+len(df[df.DepDelay > 0])
+
+len(df[df.DepDelay < 0])
+
+len(df[~df.Cancelled])
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # Divisions and the Index
@@ -273,9 +282,9 @@ df2.head()
 # One of the benefits of this is that operations like `loc` only need to load the relevant partitions
 # -
 
-df2.loc[1990]
+df2.loc[1991]
 
-df2.loc[1990].compute()
+df2.loc[1991].compute()
 
 # + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
 # ### Exercises 15.2
@@ -291,6 +300,13 @@ df2.loc[1990].compute()
 # Note, this is the same computation you did in the previous notebook (is this approach faster or slower?)
 #
 # - What day of the week has the worst average departure delay?
+# -
+
+df = dd.read_parquet("nycflights/")
+
+df[~df.Cancelled].groupby("Origin").Origin.count().compute()
+
+df[~df.Cancelled].groupby("Origin").DepDelay.count().compute()
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ## Sharing Intermediate Results
@@ -330,3 +346,6 @@ mean_delay_res, std_delay_res = dask.compute(mean_delay, std_delay)
 
 # + {"slideshow": {"slide_type": "slide"}}
 dask.visualize(mean_delay, std_delay)
+# -
+
+
