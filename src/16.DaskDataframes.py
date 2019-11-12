@@ -75,7 +75,7 @@ extract_flight() # this function call will extract 10 csv files in data/nycfligh
 # + {"slideshow": {"slide_type": "fragment"}}
 import os
 here = os.getcwd()
-filename = os.path.join(here[:-10], 'data', 'nycflights', '*.csv')
+filename = os.path.join(here, '..', 'data', 'nycflights', '*.csv')
 filename
 
 # + {"slideshow": {"slide_type": "fragment"}}
