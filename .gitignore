@@ -14,3 +14,4 @@ notebooks/nycflights
 .jupyter/
 big-data
 .config
+.cache/matplotlib/fontlist-v310.json
