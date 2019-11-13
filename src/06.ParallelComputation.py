@@ -8,9 +8,9 @@
 #       format_version: '1.4'
 #       jupytext_version: 1.2.4
 #   kernelspec:
-#     display_name: big-data
+#     display_name: Python 3
 #     language: python
-#     name: big-data
+#     name: python3
 # ---
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
@@ -130,6 +130,46 @@ print(results)
 # ### Exercise 6.1
 #
 # Use `ThreadPoolExecutor` to parallelized functions written in notebook 05
+# -
+
+X = [5, 1, 2, 3, 1, 2, 5, 4]
+P = [0.05, 0.05, 0.15, 0.05, 0.15, 0.2, 0.1, 0.25]
+
+# +
+from operator import add, mul
+from functools import reduce
+from concurrent.futures import ThreadPoolExecutor as pool
+
+def weighted_mean( X, P):
+    
+    with pool() as p:
+        w1 = p.map(mul, X, P)
+    
+    return reduce(add,w1)
+
+weighted_mean(X,P)
+
+
+# +
+def variance(X, P):
+    mu = weighted_mean(X,P)
+    with pool() as p:
+        w2 = p.map(lambda x,p:p*x*x, X, P)
+    return reduce(add,w2) - mu**2
+
+variance(X, P)
+# -
+
+import numpy as np
+x = np.array(X)
+p = np.array(P)
+np.average( x, weights=p)
+
+var =np.sum(p*x**2) - np.average( x, weights=p)**2
+var
+
+# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# # Wordcount
 
 # +
 from glob import glob
@@ -167,26 +207,9 @@ def reducer( item ):
     w, v = item
     return (w,len(v))
 
-files = glob("sample*.txt")
 
 
-def wordcount(files):
-    
-    with ThreadPoolExecutor() as e:
-    
-        mapped_values = e.map(mapper, files)
-        partioned_values = partitioner(chain(*mapped_values))
-        occurences = e.map(reducer, partioned_values)
-    
-    return sorted(occurences,
-                 key=itemgetter(1),
-                 reverse=True)
-    
-    
-wordcount(files)    
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
-# # Wordcount
 
 # + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
 #
@@ -214,6 +237,20 @@ with ProcessPoolExecutor() as e:
 #
 # - Modify the mapper function by adding this print.
 
+# +
+def mapper(filename):
+    " split text to list of key/value pairs (word,1)"
+    
+    print(f"{mp.current_process().name} : {filename}")
+    with open(filename) as f:
+        data = f.read()
+        
+    data = data.strip().replace(".","").lower().split()
+        
+    return sorted([(w,1) for w in data])
+
+
+
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ## Parallel reduce
 #
@@ -224,6 +261,24 @@ with ProcessPoolExecutor() as e:
 # Write a parallel program that uses the three functions above using `ProcessPoolExecutor`. It reads all the "sample\*.txt" files. Map and reduce steps are parallel.
 #
 
+# +
+from concurrent.futures import ProcessPoolExecutor
+
+def wordcount(files):
+    
+    with ProcessPoolExecutor() as e:
+    
+        mapped_values = e.map(mapper, files)
+        partioned_values = partitioner(chain(*mapped_values))
+        occurences = e.map(reducer, partioned_values)
+    
+    return sorted(occurences,
+                 key=itemgetter(1),
+                 reverse=True)
+    
+files = glob("sample*.txt")  
+wordcount(files)    
+
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ## Increase volume of data
 #
@@ -232,54 +287,52 @@ with ProcessPoolExecutor() as e:
 # ### Getting the data
 #
 # - [The Latin Library](http://www.thelatinlibrary.com/) contains a huge collection of freely accessible Latin texts. We get links on the Latin Library's homepage ignoring some links that are not associated with a particular author.
-#
-# ```py
-# from bs4 import BeautifulSoup  # web scraping library
-# from urllib.request import *
-#
-# base_url = "http://www.thelatinlibrary.com/"
-# home_content = urlopen(base_url)
-#
-# soup = BeautifulSoup(home_content, "lxml")
-# author_page_links = soup.find_all("a")
-# author_pages = [ap["href"] for i, ap in enumerate(author_page_links) if i < 49]
-# ```
+
+# + {"slideshow": {"slide_type": "slide"}}
+from bs4 import BeautifulSoup  # web scraping library
+from urllib.request import *
+
+base_url = "http://www.thelatinlibrary.com/"
+home_content = urlopen(base_url)
+
+soup = BeautifulSoup(home_content, "lxml")
+author_page_links = soup.find_all("a")
+author_pages = [ap["href"] for i, ap in enumerate(author_page_links) if i < 49]
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ### Generate html links
 #
 # - Create a list of all links pointing to Latin texts. The Latin Library uses a special format which makes it easy to find the corresponding links: All of these links contain the name of the text author.
-#
-# ```py 
-# ap_content = list()
-# for ap in author_pages:
-#     ap_content.append(urlopen(base_url + ap))
-#
-# book_links = list()
-# for path, content in zip(author_pages, ap_content):
-#     author_name = path.split(".")[0]
-#     ap_soup = BeautifulSoup(content, "lxml")
-#     book_links += ([link for link in ap_soup.find_all("a", {"href": True}) if author_name in link["href"]])
-#
-# ```
+
+# + {"slideshow": {"slide_type": "slide"}}
+ap_content = list()
+for ap in author_pages:
+    ap_content.append(urlopen(base_url + ap))
+
+book_links = list()
+for path, content in zip(author_pages, ap_content):
+    author_name = path.split(".")[0]
+    ap_soup = BeautifulSoup(content, "lxml")
+    book_links += ([link for link in ap_soup.find_all("a", {"href": True}) if author_name in link["href"]])
+
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ### Download webpages content
-# ```py
-# from urllib.error import HTmTPError
-#
-# num_pages = 100
-#
-# for i, bl in enumerate(book_links[:num_pages]):
-#     print("Getting content " + str(i + 1) + " of " + str(num_pages), end="\r", flush=True)
-#     try:
-#         content = urlopen(base_url + bl["href"]).read()
-#         with open(f"book-{i:03d}.dat","wb") as f:
-#             f.write(content)
-#     except HTTPError as err:
-#         print("Unable to retrieve " + bl["href"] + ".")
-#         continue
-# ```
+
+# + {"slideshow": {"slide_type": "slide"}}
+from urllib.error import HTTPError
+
+num_pages = 100
+
+for i, bl in enumerate(book_links[:num_pages]):
+    print("Getting content " + str(i + 1) + " of " + str(num_pages), end="\r", flush=True)
+    try:
+        content = urlopen(base_url + bl["href"]).read()
+        with open(f"book-{i:03d}.dat","wb") as f:
+            f.write(content)
+    except HTTPError as err:
+        print("Unable to retrieve " + bl["href"] + ".")
+        continue
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ### Extract data files
@@ -288,26 +341,28 @@ with ProcessPoolExecutor() as e:
 # - You can extract data from the archive by running the cell below
 #
 
-# + {"slideshow": {"slide_type": "fragment"}}
-import os  # library to get directory and file paths
-import tarfile # this module makes possible to read and write tar archives
-
-def extract_data():
-    datadir = os.path.join('..','data','latinbooks')
-    if not os.path.exists(datadir):
-       print("Extracting data...")
-       tar_path = os.path.join('..','data', 'latinbooks.tgz')
-       with tarfile.open(tar_path, mode='r:gz') as books:
-          books.extractall('../data')
-            
-extract_data() # this function call will extract text files in ../data/latinbooks
+# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# ```py
+# import os  # library to get directory and file paths
+# import tarfile # this module makes possible to read and write tar archives
+#
+# def extract_data():
+#     datadir = os.path.join('..','data','latinbooks')
+#     if not os.path.exists(datadir):
+#        print("Extracting data...")
+#        tar_path = os.path.join('..','data', 'latinbooks.tgz')
+#        with tarfile.open(tar_path, mode='r:gz') as books:
+#           books.extractall('../data')
+#             
+# extract_data() # this function call will extract text files in ../data/latinbooks
+# ```
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ### Read data files
 
 # + {"slideshow": {"slide_type": "fragment"}}
 from glob import glob
-files = glob('../data/latinbooks/*')
+files = glob('book*.dat')
 texts = list()
 for file in files:
     with open(file,'rb') as f:
@@ -332,12 +387,41 @@ for i, text in enumerate(texts):
         part = "".join([c for c in t if c.isalpha() or c.isspace()])
         sentences.append(part.strip())
 
+# print first and last sentence to check the results
 print(sentences[0])
+print(sentences[-1])
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ### Exercise 6.4
 #
 # Parallelize this last process using `concurrent.futures`.
+
+# +
+# %%time
+from bs4 import BeautifulSoup
+from concurrent.futures import ProcessPoolExecutor as pool
+
+def sentence_mapper(text):
+    sentences = list()
+    textSoup = BeautifulSoup(text, "lxml")
+    paragraphs = textSoup.find_all("p", attrs={"class":None})
+    prepared = ("".join([p.text.strip().lower() for p in paragraphs[1:-1]]))
+    for t in prepared.split("."):
+        part = "".join([c for c in t if c.isalpha() or c.isspace()])
+        sentences.append(part.strip())
+    return sentences
+
+# parallel map
+with pool(4) as p:
+    
+    mapped_sentences = p.map(sentence_mapper, texts)
+
+# reduce
+sentences = reduce(add, mapped_sentences )
+
+# print first and last sentence to check the results
+print(sentences[0])
+print(sentences[-1])
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ## References
