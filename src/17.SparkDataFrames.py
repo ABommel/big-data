@@ -124,6 +124,41 @@
 
 # ## Creating a DataFrame in Python
 
+# For macosx 
+# - Install java-8 (https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+# - Install spark with homebrew `brew install apache-spark`
+# - Install pyspark with pip `pip3 install pyspark`
+#
+#
+# ```py
+#
+# import os
+# import findspark
+#
+#
+# os.environ["JAVA_HOME"]="/Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home"
+# os.environ["SPARK_HOME"]="/usr/local/opt/apache-spark/libexec"
+# os.environ["PYSPARK_PYTHON"]="/usr/local/bin/python3"
+#
+#
+# findspark.init()
+# ```
+import pyspark
+
+
+
+
+# +
+import os
+import findspark
+
+
+os.environ["JAVA_HOME"]="/Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home"
+os.environ["SPARK_HOME"]="/usr/local/opt/apache-spark/libexec"
+os.environ["PYSPARK_PYTHON"]="/usr/local/bin/python3"
+
+# -
+
 from pyspark import SparkContext, SparkConf, SQLContext
 # The following three lines are not necessary
 # in the pyspark shell
@@ -132,7 +167,7 @@ sc = SparkContext(conf=conf)
 sqlContext = SQLContext(sc)
 
 # +
-df = sqlContext.read.json("/tmp/people.json")
+df = sqlContext.read.json("../data/people.json")
 
 df.show(24)
 # -
@@ -141,7 +176,7 @@ df.show(24)
 #
 # In this exercise, let's explore schema inference. We're going to be using a file called `irmar.txt`. The data is structured, but it has no self-describing schema. And, it's not JSON, so Spark can't infer the schema automatically. Let's create an RDD and look at the first few rows of the file.
 
-rdd = sc.textFile("/tmp/irmar.csv")
+rdd = sc.textFile("../data/irmar.csv")
 for line in rdd.take(10):
   print(line)
 
@@ -164,7 +199,7 @@ for line in rdd.take(10):
 # +
 from collections import namedtuple
 
-rdd = sc.textFile("/tmp/irmar.csv")
+rdd = sc.textFile("../data/irmar.csv")
 
 Person = namedtuple('Person', ['name', 'phone', 'office', 'organization', 
                                'position', 'hdr', 'team1', 'team2'])
@@ -173,15 +208,15 @@ def str_to_bool(s):
     return False
             
 def map_to_person(line):
-  cols = line.split(";")
-  return Person(name         = cols[0],
-                phone        = cols[1],
-                office       = cols[2],
-                organization = cols[3],
-                position     = cols[4], 
-                hdr          = str_to_bool(cols[5]),
-                team1        = cols[6],
-                team2        = cols[7])
+    cols = line.split(";")
+    return Person(name         = cols[0],
+                  phone        = cols[1],
+                  office       = cols[2],
+                  organization = cols[3],
+                  position     = cols[4], 
+                  hdr          = str_to_bool(cols[5]),
+                  team1        = cols[6],
+                  team2        = cols[7])
     
 people_rdd = rdd.map(map_to_person)
 df = people_rdd.toDF()
@@ -239,18 +274,59 @@ df.groupBy(df["organization"]).count().show()
 # - How many MC in STATS team ?
 # - How many MC+CR with HDR ?
 # - What is the ratio of student supervision (DOC / HDR) ?
-# - Which team contains most HDR ?
-# - Which team contains most DOC ?
 # - List number of people for every organization ?
 # - List number of HDR people for every team ?
+# - Which team contains most HDR ?
 # - List number of DOC students for every organization ?
+# - Which team contains most DOC ?
 # - List people from CNRS that are neither CR nor DR ?
 
-(df.select(df['organization'],df['position'])
-.filter(df['organization'] == 'INSA')
-.filter((df['position'] == 'MC')|(df['position'] == 'PR'))
-.count())
+df.select("organization").filter(df["organization"]=="INSA").count()
 
+(df.select(["position", "team1", "team2"])
+ .filter((df["team1"]=="STAT") | (df["team2"]=="STAT"))
+ .filter(df["position"] == "MC").count())
 
+(df.select(df["position"], df["hdr"])
+ .filter((df["position"]=="MC") | (df["position"]=="CR"))
+ .filter(df["hdr"]).count())
+
+(df.select(df["position"]).filter(df["position"]=="DOC").count() /
+ df.select(df["hdr"]).filter(df["hdr"]).count())
+
+(df.select(["hdr", "team1", "team2"])
+ .filter("hdr")
+ .rdd.flatMap(lambda row: (row.team1, row.team2))
+ .filter(lambda v : v != 'NA')
+ .map(lambda row : (row,1))
+ .reduceByKey(lambda a, b:a+b)
+ .collect()
+)
+
+(df.select(["position", "team1", "team2"])
+ .filter(df.position=="DOC")
+ .rdd.flatMap(lambda row: [row.team1, row.team2])
+ .filter(lambda v : v != 'NA')
+ .map(lambda row : (row,1))
+ .reduceByKey(lambda a, b:a+b)
+ .collect()
+)
+
+(df.filter((df.position=="DOC") & (df.team1 == "ANANUM"))
+ .select("name")
+ .show()
+)
+
+(df.select("organization")
+ .groupby("organization").count().show())
+
+(df.select(["name","organization","position"])
+ .filter((df.position == "DR") | (df.position == "CR"))
+ .show())
+
+(df.select(["name","organization","position"])
+ .filter(df.organization == "CNRS")
+ .filter((df.position != "DR") | (df.position != "CR"))
+ .show())
 
 sc.stop()
