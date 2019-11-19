@@ -124,25 +124,30 @@
 
 # ## Creating a DataFrame in Python
 
-# For macosx 
+# +
+import os
+import findspark
+
+os.environ["JAVA_HOME"]="/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home"
+os.environ["SPARK_HOME"]="/usr/local/opt/apache-spark/libexec"
+os.environ["PYSPARK_PYTHON"]="/usr/local/bin/python3"
+
+findspark.init()
+# -
+
+# # For macosx 
 # - Install java-8 (https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 # - Install spark with homebrew `brew install apache-spark`
 # - Install pyspark with pip `pip3 install pyspark`
-#
-#
 # ```py
-#
 # import os
 # import findspark
-#
-#
 # os.environ["JAVA_HOME"]="/Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home"
 # os.environ["SPARK_HOME"]="/usr/local/opt/apache-spark/libexec"
 # os.environ["PYSPARK_PYTHON"]="/usr/local/bin/python3"
-#
-#
 # findspark.init()
 # ```
+
 from pyspark import SparkContext, SparkConf, SQLContext
 # The following three lines are not necessary
 # in the pyspark shell
@@ -151,7 +156,7 @@ sc = SparkContext(conf=conf)
 sqlContext = SQLContext(sc)
 
 # +
-df = sqlContext.read.json("../data/people.json")
+df = sqlContext.read.json("../data/people.json") # get a dataframe from json file
 
 df.show(24)
 # -
@@ -190,7 +195,7 @@ Person = namedtuple('Person', ['name', 'phone', 'office', 'organization',
 def str_to_bool(s):
     if s == 'True': return True
     return False
-            
+
 def map_to_person(line):
     cols = line.split(";")
     return Person(name         = cols[0],
@@ -271,11 +276,11 @@ df.select("organization").filter(df["organization"]=="INSA").count()
  .filter((df["team1"]=="STAT") | (df["team2"]=="STAT"))
  .filter(df["position"] == "MC").count())
 
-(df.select(df["position"], df["hdr"])
+(df.select(["position", "hdr"])
  .filter((df["position"]=="MC") | (df["position"]=="CR"))
  .filter(df["hdr"]).count())
 
-(df.select(df["position"]).filter(df["position"]=="DOC").count() /
+(df.select("position").filter(df["position"]=="DOC").count() /
  df.select(df["hdr"]).filter(df["hdr"]).count())
 
 (df.select(["hdr", "team1", "team2"])
@@ -284,6 +289,7 @@ df.select("organization").filter(df["organization"]=="INSA").count()
  .filter(lambda v : v != 'NA')
  .map(lambda row : (row,1))
  .reduceByKey(lambda a, b:a+b)
+ .sortBy(lambda v: -v[1])
  .collect()
 )
 
@@ -293,23 +299,32 @@ df.select("organization").filter(df["organization"]=="INSA").count()
  .filter(lambda v : v != 'NA')
  .map(lambda row : (row,1))
  .reduceByKey(lambda a, b:a+b)
+ .sortBy(lambda v: -v[1])
  .collect()
 )
 
 # +
-df1 = (df.select(["position", "team1"])
- .groupBy("team1")
- .count()
-)
+import pyspark.sql.functions as f
 
-df2 = (df.select(["position", "team2"])
- .filter(df.team2 != "NA")
- .groupBy("team2")
- .count()
+df1 = (df.select(["position", "team1", "hdr"])
+ .filter(df.hdr)
+ .groupBy("team1")
+ .agg(f.count("position").alias("count1"))
 )
 # -
 
-df = df1.join(df2, df1.team1 == df2.team2).withColumn("total", df1["count"]+df2["count"]).show()
+df2 = (df.select(["position", "team2", "hdr"])
+ .filter(df.hdr)
+ .filter(df.team2 != "NA")
+ .groupBy("team2")
+ .agg(f.count("team2").alias("count2"))
+)
+
+df3 = (df1.join(df2, df1.team1 == df2.team2, how="left")
+ .na.fill(0)
+ .drop("team2"))
+
+df3.withColumn("total", df3.count1+df3.count2).orderBy("total", ascending=False).show()
 
 (df.filter((df.position=="DOC") & (df.team1 == "ANANUM"))
  .select("name")
@@ -325,7 +340,10 @@ df = df1.join(df2, df1.team1 == df2.team2).withColumn("total", df1["count"]+df2[
 
 (df.select(["name","organization","position"])
  .filter(df.organization == "CNRS")
- .filter((df.position != "DR") | (df.position != "CR"))
- .show())
+ .filter((df.position != "DR") & (df.position != "CR"))
+ .groupBy("position").count().show())
+
 
 sc.stop()
+
+
