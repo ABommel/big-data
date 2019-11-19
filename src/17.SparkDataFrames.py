@@ -143,22 +143,6 @@
 #
 # findspark.init()
 # ```
-import pyspark
-
-
-
-
-# +
-import os
-import findspark
-
-
-os.environ["JAVA_HOME"]="/Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home"
-os.environ["SPARK_HOME"]="/usr/local/opt/apache-spark/libexec"
-os.environ["PYSPARK_PYTHON"]="/usr/local/bin/python3"
-
-# -
-
 from pyspark import SparkContext, SparkConf, SQLContext
 # The following three lines are not necessary
 # in the pyspark shell
@@ -311,6 +295,21 @@ df.select("organization").filter(df["organization"]=="INSA").count()
  .reduceByKey(lambda a, b:a+b)
  .collect()
 )
+
+# +
+df1 = (df.select(["position", "team1"])
+ .groupBy("team1")
+ .count()
+)
+
+df2 = (df.select(["position", "team2"])
+ .filter(df.team2 != "NA")
+ .groupBy("team2")
+ .count()
+)
+# -
+
+df = df1.join(df2, df1.team1 == df2.team2).withColumn("total", df1["count"]+df2["count"]).show()
 
 (df.filter((df.position=="DOC") & (df.team1 == "ANANUM"))
  .select("name")
