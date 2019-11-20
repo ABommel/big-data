@@ -2,6 +2,7 @@
 # ---
 # jupyter:
 #   jupytext:
+#     formats: ipynb,../src//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
@@ -131,7 +132,9 @@
 # findspark.init()
 # ```
 
-import sys
+import sys, findspark
+# Set the right value for spark_home
+findspark.init(spark_home="/usr/local/opt/apache-spark/libexec")
 sys.path
 
 import pyspark
@@ -155,8 +158,14 @@ rdd
 #
 # Create a file `sample.txt`with lorem package. Read and load it into a RDD with the `textFile` spark function.
 
-import os
-os.getcwd()
+# +
+import lorem
+
+with open("sample.txt","w") as f:
+    f.write(lorem.text())
+    
+rdd = sc.textFile("sample.txt")
+    
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ### Collect
@@ -169,6 +178,8 @@ os.getcwd()
 # ### Exercise 
 #
 # Collect the text you read before from the `sample.txt`file.
+
+rdd.collect()
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ### Map
@@ -185,6 +196,15 @@ rdd.map(lambda x: x ** 2).collect() # Square each element
 # ### Exercise
 #
 # Replace the lambda function by a function that contains a pause (sleep(1)) and check if the `map` operation is parallelized.
+
+# +
+from time import sleep
+def square(x):
+    sleep(1)
+    return x**2
+
+# %time rdd.map(square).collect()
+
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ### Filter
@@ -212,6 +232,8 @@ rdd.flatMap(lambda x: (x, x*100, 42)).collect()
 # ### Exercise
 #
 # Use FlatMap to clean the text from `sample.txt`file. Lower, remove dots and split into words.
+
+
 
 # + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
 # ### GroupBy
@@ -497,14 +519,7 @@ filenames = sorted(glob.glob(os.path.join(here[:-10],'data', 'daily-stock', '*.h
 filenames
 # -
 
-# Start the PySpark context
-
-# +
-import findspark, pyspark
-
-findspark.init(spark_home="/export/spark-2.3.1-bin-hadoop2.7/")
-
-sc = pyspark.SparkContext(master="local[4]", appName="DailyStock")
+# If it is not started don't forget the PySpark context
 
 # +
 ### Parallel code
@@ -513,12 +528,12 @@ import pandas as pd
 rdd = sc.parallelize(filenames)
 series = rdd.map(lambda fn: pd.read_hdf(fn)['close'])
 
-# your code here...
+corr = (series.cartesian(series)
+              .filter(lambda ab: not (ab[0] == ab[1]).all())
+              .map(lambda ab: ab[0].corr(ab[1]))
+              .max())
 
 corr
-# -
-
-sc.stop
 
 # + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
 # Computation time is slower because there is a lot of setup, workers creation, there is a lot of communications the correlation function is too small
@@ -530,7 +545,40 @@ sc.stop
 #
 # $$\cfrac{G+C}{A+T+G+C}\times100%$$
 #
-# Create a rdd from fasta file nucleotide-sample.txt in data directory and count 'G' and 'C' then divide by the total number of bases.
+# Create a rdd from fasta file genome.txt in data directory and count 'G' and 'C' then divide by the total number of bases.
 # -
 
+genome = sc.textFile('../data/genome.txt')
 
+lines = genome.flatMap(lambda line: line.split())
+g = lines.map(lambda line: line.count("G")).sum()
+c = lines.map(lambda line: line.count("C")).sum()
+(g + c) / lines.map(lambda line:len(line)).sum()
+
+
+# ### Another example
+#
+# Compute the most frequent sequence with 5 bases.
+
+# +
+def group_characters(line, n=5):
+    result = ''
+    i = 0
+    for ch in line:
+        result = result + ch
+        i = i + 1
+        if (i % n) == 0:
+            yield result
+            result = ''
+
+def group_and_split(line):
+    return [sequence for sequence in group_characters(line)]
+
+sequences = genome.flatMap(group_and_split)
+sequences.take(3)
+# -
+
+counts = sequences.map(lambda w: (w, 1)).reduceByKey(lambda x, y: x + y).sortBy(lambda v:-v[1])
+counts.take(10)
+
+sc.stop()
