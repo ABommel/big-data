@@ -4,6 +4,7 @@ channels:
 dependencies:
   - bokeh
   - dask
+  - dask-jobqueue
   - feather-format
   - findspark
   - jupytext
