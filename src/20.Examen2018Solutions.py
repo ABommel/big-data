@@ -6,8 +6,8 @@
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.5'
-#       jupytext_version: 1.3.0
+#       format_version: '1.4'
+#       jupytext_version: 1.2.4
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -26,16 +26,17 @@
 #
 # Les données fournies pour cette examen sont les crimes reportés dans une grande ville américaine durant une année.
 
-# +
-import os
-import findspark
-
-os.environ["JAVA_HOME"]="/Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home"
-os.environ["SPARK_HOME"]="/usr/local/opt/apache-spark/libexec"
-os.environ["PYSPARK_PYTHON"]="/usr/local/bin/python3"
-
-findspark.init()
-# -
+# Only for my mac 
+# ```py
+# import os
+# import findspark
+#
+# os.environ["JAVA_HOME"]="/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home"
+# os.environ["SPARK_HOME"]="/usr/local/opt/apache-spark/libexec"
+# os.environ["PYSPARK_PYTHON"]="/usr/local/bin/python3"
+#
+# findspark.init()
+# ```
 
 # ## Exercice 1
 #
@@ -214,7 +215,7 @@ from pyspark.sql.functions import to_date, to_timestamp
 
 spark = SparkSession(sc)
 
-df = spark.read.csv("file:///Users/navaro/Desktop/big-data/data/philadelphia-crime-data-2015-ytd.csv",
+df = spark.read.csv("../data/philadelphia-crime-data-2015-ytd.csv",
                    mode="DROPMALFORMED",
                    header=True)
 
@@ -237,16 +238,17 @@ myfunc =  udf(lambda x: x.strip() , StringType())
 new_df = df.withColumn("TEXT_GENERAL_CODE", myfunc(col('TEXT_GENERAL_CODE')))
 new_df.groupBy("TEXT_GENERAL_CODE").count().orderBy("count", ascending=False).show()
 
+# +
+from pyspark.sql.functions import hour
+
 homicides = (new_df.filter("TEXT_GENERAL_CODE == 'Homicide - Criminal'")
 .select(hour(new_df["DISPATCH_TIME"])
 .alias("hour"))
 .groupBy("hour").count().collect())
+# -
 
 hours, counts = zip(*[(row.hour,row["count"])  for row in homicides])
 
-# +
-
 plt.bar(hours, counts)
-# -
 
 
