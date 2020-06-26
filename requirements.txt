@@ -8,4 +8,4 @@ lorem
 lxml
 pyarrow
 tables
-python-graphviz
+graphviz
