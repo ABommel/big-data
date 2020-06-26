@@ -1,0 +1,11 @@
+bokeh
+dask
+dask-jobqueue
+feather-format
+findspark
+jupytext
+lorem
+lxml
+pyarrow
+pytables
+python-graphviz
