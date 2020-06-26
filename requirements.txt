@@ -7,5 +7,5 @@ jupytext
 lorem
 lxml
 pyarrow
-pytables
+tables
 python-graphviz
