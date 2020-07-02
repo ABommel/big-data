@@ -1,0 +1,13 @@
+bokeh
+dask
+feather-format
+jupytext
+lorem
+lxml
+pyarrow
+tables
+graphviz
+toolz
+pandas
+h5py
+seaborn
