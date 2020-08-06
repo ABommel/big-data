@@ -2,21 +2,24 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,../src//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.5.2
 #   kernelspec:
 #     display_name: big-data
 #     language: python
 #     name: big-data
 # ---
 
+# # Jupyter
+#
 # ![jupyter](images/jupyter-logo.png)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Launch Jupyter server
 #
 # ```bash
@@ -27,13 +30,13 @@
 # - Go to notebooks folder
 # - Open the file 03.JupyterQuickStart.ipynb
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # # Make a Copy
 #
 # Before modifying the notebook, make a copy of it. Go to to `File` menu
 # on the top left of the notebook and click on `Make a Copy...`
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Jupyter Notebook
 #
 # Jupyter notebook, formerly known as the IPython notebook, is a flexible tool that helps you create readable analyses, as you can keep code, images, comments, formulae and plots together.
@@ -42,7 +45,7 @@
 #
 # The name Jupyter is an indirect acronyum of the three core languages it was designed for: **JU**lia, **PYT**hon, and **R**
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Keyboard Shortcuts
 #
 # - To access keyboard shortcuts, use the command palette: `Cmd + Shift + P`
@@ -55,7 +58,7 @@
 #
 #
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Easy links to documentation
 #
 # - Shift + Tab will also show you the Docstring
@@ -63,7 +66,7 @@
 # + {"slideshow": {"slide_type": "fragment"}}
 dict
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Magic commands
 #
 #
@@ -110,7 +113,7 @@ for n in range(10):
     f1, f2 = f2, f1+f2
 print()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Installing Python Packages from a Jupyter Notebook
 #
 # ### Install a conda package in the current Jupyter kernel

@@ -5,12 +5,12 @@
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.5.2
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: big-data
 #     language: python
-#     name: python3
+#     name: big-data
 # ---
 
 # # Hadoop File Formats
@@ -86,5 +86,3 @@ table2.to_pandas()
 pq.read_table('example.parquet', columns=['one', 'three'])
 
 pq.read_pandas('example.parquet', columns=['two']).to_pandas()
-
-

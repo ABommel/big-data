@@ -2,26 +2,27 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,../src//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.5.2
 #   kernelspec:
 #     display_name: big-data
 #     language: python
 #     name: big-data
 # ---
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Git
 #
 # Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.
 #
 # Official website https://git-scm.com
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # GitHub
 #
 # - Web-based hosting service for version control using Git. 
@@ -29,7 +30,7 @@
 # - Provides access control and several collaboration features such as bug tracking, feature requests, task management, and wikis for every project.
 # - Github is the largest host of source code in the world.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # About SCM
 #
 # - Records changes to a file or set of files over time.
@@ -40,14 +41,14 @@
 # - Figures are downloaded from [Pro Git book](http://git-scm.com/book).
 # - "Become a git guru" tutorial (https://www.atlassian.com/git/tutorials).
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Local Version Control System
 #
 # <img src="images/local.png" alt="rcs" width="400px"/>
 #
 # - Collaboration is not really possible.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Distributed Version Control Systems
 #
 # <img src="images/git.png" alt="git" width="300px"/>
@@ -59,7 +60,7 @@
 #  
 #  
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Configure Git
 #
 # Settings are saved on the computer for all your git repositories.
@@ -69,7 +70,7 @@
 # git config --global user.email “prenom.nom@univ-rennes2.fr"
 # ```
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Cloning the repository
 #
 # ```bash
@@ -80,7 +81,7 @@
 # git clone https://github.com/pnavaro/big-data.git
 # ```
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # # To save your work locally create a branch
 #
 # ```bash
@@ -92,12 +93,12 @@
 #   
 # <img src="images/18333fig0201-tn.png" alt="git" width="450px"/>
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Git Workflow
 #
 # <img src="images/four_stages.png" alt="git" width="150px"/>
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Locally saving your modifications
 #
 # Get your files status
@@ -105,27 +106,27 @@
 # + {"slideshow": {"slide_type": "slide"}, "language": "bash"}
 # git status
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Add the modified file to the index
 #
 # ```bash
 # git add your_notebook_copy.ipynb
 # ```
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # Checking which files are ready to be committed.
 
 # + {"slideshow": {"slide_type": "fragment"}, "language": "bash"}
 # git status
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # Now save your work, the branch is local.
 #
 # ```bash
 # git commit -m 'Some modifications'
 # ```
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Updating from the Repository
 #
 # If the master branch has changed. To get all new updates :
@@ -133,7 +134,7 @@
 # + {"attributes": {"classes": ["git"], "id": ""}, "slideshow": {"slide_type": "fragment"}, "language": "bash"}
 # git pull origin master
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Solve conflicts
 #
 # - If you have some conflicts, no problem just do :
@@ -153,7 +154,7 @@
 # Be careful with this last command, you remove uncommited changes.
 #
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Git through IDE
 #
 # - Install bash-completion and source git-prompt.sh.

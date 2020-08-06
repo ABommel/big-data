@@ -7,14 +7,16 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.1
+#       jupytext_version: 1.5.2
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: big-data
 #     language: python
-#     name: python3
+#     name: big-data
 # ---
 
 # + [markdown] {"slideshow": {"slide_type": "slide"}}
+# # Dask
+#
 # <img src="images/dask_logo.jpg">
 
 # + [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -207,7 +209,7 @@ def extract_data(name, where):
        with tarfile.open(tar_path, mode='r:gz') as data:
           data.extractall(where)
             
-extract_data('daily-stock','../data') # this function call will extract json files
+extract_data('daily-stock','data') # this function call will extract json files
 
 # + {"slideshow": {"slide_type": "fragment"}}
 import os, sys
@@ -216,11 +218,10 @@ import pandas as pd
 import json
 
 here = os.getcwd() # get the current directory
-filenames = sorted(glob(os.path.join(here,'../data', 'daily-stock', '*.json')))
+filenames = sorted(glob(os.path.join(here,'data', 'daily-stock', '*.json')))
+
 
 # + {"slideshow": {"slide_type": "slide"}}
-from tqdm.notebook import tqdm 
-
 def read( fn ):
     with open(fn) as f:
         return [json.loads(line) for line in f]
@@ -229,16 +230,16 @@ def convert(data):
     df = pd.DataFrame(data)
     
     out_filename = fn[:-5] + '.h5'
-    df.to_hdf(out_filename, os.path.join(here,'..','data'))
+    df.to_hdf(out_filename, os.path.join(here,'data'))
     return
 
-for fn in tqdm(filenames):  
+for fn in filenames:  
     data = read( fn)
     convert(data)
     
 # -
 
-# %ls ../data/daily-stock/*.h5
+# %ls data/daily-stock/*.h5
 
 # +
 @dask.delayed
@@ -262,5 +263,3 @@ for filename in filenames:
 # -
 
 # %time dask.compute(*results)
-
-

@@ -1,24 +1,25 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,../src//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.5.2
 #   kernelspec:
 #     display_name: big-data
 #     language: python
 #     name: big-data
 # ---
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Map
 #
 # ![domain decomposition](https://computing.llnl.gov/tutorials/parallel_comp/images/domain_decomp.gif)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 #
 # ## `map` function example
 #
@@ -43,10 +44,10 @@ res = map(mul, rdd1, rdd2 ) # element wise sum of rdd1 and rdd2
 # + {"slideshow": {"slide_type": "fragment"}}
 print(*res)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ![MapReduce](images/mapreduce.jpg)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## `functools.reduce` example
 #
 # The function `reduce(func, seq)` continually applies the function func() to the sequence seq and return a single value. For example, reduce(f, [1, 2, 3, 4, 5]) calculates f(f(f(f(1,2),3),4),5).
@@ -76,7 +77,7 @@ for x in rdd:
     p *= x
 p
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Weighted mean and Variance
 #
 # If the generator of random variable $X$ is discrete with probability mass function $x_1 \mapsto p_1, x_2 \mapsto p_2, \ldots, x_n \mapsto p_n$ then
@@ -107,7 +108,7 @@ for x, p in zip_longest(X, [0.1], fillvalue=0.0):
 sum(P)
 
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # ### Exercise 5.1
 #
 # - Write functions to compute the average value and variance using for loops
@@ -126,7 +127,7 @@ def variance(X, P):
 
 variance(X, P)
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # ### Exercise 5.2
 #
 # - Write functions to compute the average value and variance using `map` and `reduce`
@@ -158,11 +159,11 @@ print(*res)
 res = filter( lambda x: x % 3 == 0, range(15)) # select integer that can be divided by 3
 print(*res)
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # *NB: Exercises above are just made to help to understand map-reduce process.
 # This is a bad way to code a variance in Python. You should use [Numpy](http://www.numpy.org) instead.*
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Wordcount 
 #
 # We will modify the `wordcount` application into a map-reduce process.
@@ -173,7 +174,7 @@ print(*res)
 #
 # In the following exercices we will implement in Python the Java example described in [Hadoop documentation](https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html#Example:_WordCount_v1.0).
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Map 
 #
 # ## Read file and return a key/value pairs
@@ -230,7 +231,7 @@ def partitioner(mapped_values):
 
 partitioner(mapper('sample.txt'))
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Reduce 
 #
 # ## Sums the counts and returns a single key/value (word, sum).
@@ -254,7 +255,7 @@ def reducer( item ):
 
 reducer(('hello',[1,1,1,1,1]))
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Process several files
 #
 # Let's create 8 files `sample[0-7].txt`. Set most common words at the top of the output list.
@@ -270,7 +271,7 @@ import glob
 files = sorted(glob.glob('sample0*.txt'))
 files
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 5.6
 # - Use functions implemented above to count (word, occurences) by using a for loops over files and partitioned data.
 
@@ -290,7 +291,7 @@ def wordcount(files):
 wordcount(files)
 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 5.7
 # - This time use `map` function to apply mapper and reducer.
 #

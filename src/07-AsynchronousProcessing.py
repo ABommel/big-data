@@ -1,19 +1,20 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,../src//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.5.2
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: big-data
 #     language: python
-#     name: python3
+#     name: big-data
 # ---
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Asynchronous Processing
 #
 # While many parallel applications can be described as maps, some can be more complex.
@@ -21,7 +22,7 @@
 # which provides a simple API for ad-hoc parallelism.
 # This is useful for when your computations don't fit a regular pattern.
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # ### Executor.submit
 #
 # The `submit` method starts a computation in a separate thread or process and immediately gives us a `Future` object that refers to the result.  At first, the future is pending.  Once the function completes the future is finished. 
@@ -49,7 +50,7 @@ future
 # + {"slideshow": {"slide_type": "fragment"}}
 future.result()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Submit many tasks, receive many futures
 #
 # Because submit returns immediately we can submit many tasks all at once and they will execute in parallel.
@@ -66,13 +67,13 @@ futures = [e.submit(slowadd, i, i, delay=1) for i in range(8)]
 results = [f.result() for f in futures]
 print(results)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # *  Submit fires off a single function call in the background, returning a future.  
 # *  When we combine submit with a single for loop we recover the functionality of map.  
 # *  When we want to collect our results we replace each of our futures, `f`, with a call to `f.result()`
 # *  We can combine submit with multiple for loops and other general programming to get something more general than map.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 7.1
 #
 # Parallelize the following code with e.submit
@@ -103,7 +104,7 @@ for i in range(4):
             
 print(results)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Extract daily stock data from google
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -118,9 +119,9 @@ def extract_data(name, where):
        with tarfile.open(tar_path, mode='r:gz') as data:
           data.extractall(where)
             
-extract_data('daily-stock','../data') # this function call will extract json files
+extract_data('daily-stock','data') # this function call will extract json files
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Convert data to pandas DataFrames and save it in hdf5 files
 #
 # [HDF5](https://portal.hdfgroup.org/display/support) is a data model, library, and file format for storing and managing data. This format is widely used and is supported by many languages and platforms.
@@ -131,11 +132,11 @@ import pandas as pd
 import os, glob
 
 here = os.getcwd()
-datadir = os.path.join(here,'..','data','daily-stock')
+datadir = os.path.join(here,'data','daily-stock')
 filenames = sorted(glob.glob(os.path.join(datadir, '*.json')))
 filenames
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Sequential version
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -159,23 +160,23 @@ def load_parse_store(fn):
 
     
 results = [load_parse_store(file) for file in filenames]
-    
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 7.2
 #
-# Parallelize the loop above using `ProcessPoolExecutor` and `map`.
+# Parallelize the loop above using `ThreadPoolExecutor` and `map`.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Read files and load dataframes.
 
 # + {"slideshow": {"slide_type": "fragment"}}
-filenames = sorted(glob.glob(os.path.join('..','data', 'daily-stock', '*.h5')))
+filenames = sorted(glob.glob(os.path.join('data', 'daily-stock', '*.h5')))
 series ={}
 for fn in filenames:
     series[fn] = pd.read_hdf(fn)['close']
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Application
 #
 # Given our HDF5 files from the last section we want to find the two datasets with the greatest pair-wise correlation.  This forces us to consider all $n\times(n-1)$ possibilities.
@@ -194,7 +195,7 @@ for a in filenames:
 ((a, b), corr) = max(results.items(), key=lambda kv: kv[1])
 print("%s matches with %s with correlation %f" % (a, b, corr))
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # We use matplotlib to visually inspect the highly correlated timeseries
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -205,7 +206,7 @@ plt.plot(series[a]/series[a].max())
 plt.plot(series[b]/series[b].max())
 plt.xticks(visible=False);
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Analysis
 #
 # This computation starts out by loading data from disk. We already know how to parallelize it:
@@ -237,7 +238,7 @@ plt.xticks(visible=False);
 # +
 # %%time
 
-from concurrent.futures import ProcessPoolExecutor as PoolExecutor
+from concurrent.futures import ThreadPoolExecutor as PoolExecutor
 
 
 e = PoolExecutor()
@@ -261,7 +262,7 @@ print("%s matches with %s with correlation %f" % (a, b, corr))
 
 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 7.3
 # - Parallelize pair-wise correlations with `e.submit`
 # - Implement two versions one using Processes, another with Threads by replacing `e` with a ProcessPoolExecutor:
@@ -282,7 +283,7 @@ print("%s matches with %s with correlation %f" % (a, b, corr))
 #
 # - How does performance vary? 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # Some conclusions about futures
 # ----------------------------
 #
@@ -290,6 +291,3 @@ print("%s matches with %s with correlation %f" % (a, b, corr))
 # *  It didn't actually speed up the code very much
 # *  Threads and Processes give some performance differences
 # *  This is not very robust.
-# -
-
-

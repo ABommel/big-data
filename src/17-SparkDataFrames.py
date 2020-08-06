@@ -6,12 +6,12 @@
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.5.2
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: big-data
 #     language: python
-#     name: python3
+#     name: big-data
 # ---
 
 # # Spark DataFrames
@@ -125,28 +125,23 @@
 # ## Creating a DataFrame in Python
 
 # +
+import sys, subprocess
 import os
 import findspark
 
-os.environ["JAVA_HOME"]="/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home"
-os.environ["SPARK_HOME"]="/usr/local/opt/apache-spark/libexec"
-os.environ["PYSPARK_PYTHON"]="/usr/local/bin/python3"
+if sys.platform == "darwin":
+    os.environ["JAVA_HOME"] = str(subprocess.check_output(['/usr/libexec/java_home']))
+    os.environ["SPARK_HOME"] = "/usr/local/opt/apache-spark/libexec"
+    os.environ["PYSPARK_PYTHON"] = sys.executable
 
 findspark.init()
 # -
 
-# # For macosx 
-# - Install java-8 (https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-# - Install spark with homebrew `brew install apache-spark`
-# - Install pyspark with pip `pip3 install pyspark`
-# ```py
-# import os
-# import findspark
-# os.environ["JAVA_HOME"]="/Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home"
-# os.environ["SPARK_HOME"]="/usr/local/opt/apache-spark/libexec"
-# os.environ["PYSPARK_PYTHON"]="/usr/local/bin/python3"
-# findspark.init()
-# ```
+from pyspark.sql  import SparkSession
+spark = SparkSession.builder \
+     .master("local") \
+     .appName("Irmar People") \
+     .getOrCreate()
 
 from pyspark import SparkContext, SparkConf, SQLContext
 # The following three lines are not necessary
@@ -156,7 +151,7 @@ sc = SparkContext(conf=conf)
 sqlContext = SQLContext(sc)
 
 # +
-df = sqlContext.read.json("../data/people.json") # get a dataframe from json file
+df = sqlContext.read.json("data/people.json") # get a dataframe from json file
 
 df.show(24)
 # -

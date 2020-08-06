@@ -1,19 +1,20 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,../src//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.5.2
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: big-data
 #     language: python
-#     name: python3
+#     name: big-data
 # ---
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Parallel Computation
 #
 # ## Parallel computers
@@ -22,7 +23,7 @@
 # - Co-processor: a general-purpose processor delegates specific tasks to a special-purpose processor (GPU)
 #
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Parallel Programming
 # - Decomposition of the complete task into independent subtasks and the data flow between them.
 # - Distribution of the subtasks over the processors minimizing the total execution time.
@@ -30,7 +31,7 @@
 # - For multiprocessors: optimization of the memory access patterns minimizing waiting times.
 # - Synchronization of the individual processes.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## MapReduce
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -42,12 +43,12 @@ L = list(range(8))
 L
 
 # + {"slideshow": {"slide_type": "fragment"}}
-# %time sum([f(x) for x in L])
+# %time sum(f(x) for x in L)
 
 # + {"slideshow": {"slide_type": "fragment"}}
 # %time sum(map(f,L))
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Multiprocessing 
 #
 # `multiprocessing` is a package that supports spawning processes.
@@ -59,7 +60,7 @@ from multiprocessing import cpu_count
 
 cpu_count()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Futures
 #
 # The `concurrent.futures` module provides a high-level interface for asynchronously executing callables.
@@ -73,33 +74,48 @@ cpu_count()
 # [loky](https://github.com/tomMoral/loky).
 
 # + {"slideshow": {"slide_type": "slide"}}
-# %%time
+# %%file pmap.py
 from concurrent.futures import ProcessPoolExecutor
-# from loky import ProcessPoolExecutor  # for Windows users
+from time import sleep, time
 
-with ProcessPoolExecutor() as epool: # Create several Python processes (cpu_count)
+def f(x):
+    sleep(1)
+    return x*x
 
-    results = sum(epool.map(f, L))
+L = list(range(8))
+
+if __name__ == '__main__':
     
-print(results)
+    begin = time()
+    with ProcessPoolExecutor() as pool:
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+        result = sum(pool.map(f, L))
+    end = time()
+    
+    print(f"result = {result} and time = {end-begin}")
+
+# +
+# # %%bash
+# 
+# python pmap.py
+
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # - `ProcessPoolExecutor` launches one slave process per physical core on the computer. 
-# - `epool.map` divides the input list into chunks and puts the tasks (function + chunk) on a queue.
+# - `pool.map` divides the input list into chunks and puts the tasks (function + chunk) on a queue.
 # - Each slave process takes a task (function + a chunk of data), runs map(function, chunk), and puts the result on a result list.
-# - `epool.map` on the master process waits until all tasks are handled and returns the concatenation of the result lists.
+# - `pool.map` on the master process waits until all tasks are handled and returns the concatenation of the result lists.
 
 # + {"slideshow": {"slide_type": "slide"}}
 # %%time
 from concurrent.futures import ThreadPoolExecutor
 
-with ThreadPoolExecutor() as epool:
+with ThreadPoolExecutor() as pool:
 
-    results = sum(epool.map(f, L))
+    results = sum(pool.map(f, L))
     
 print(results)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Thread and Process: Differences
 #
 # - A **process** is an instance of a running program. 
@@ -115,7 +131,7 @@ print(results)
 #
 #
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## The Global Interpreter Lock (GIL)
 #
 # - The Python interpreter is not thread safe.
@@ -124,7 +140,7 @@ print(results)
 # - Multiprocessing avoids the GIL by having separate processes which each have an independent copy of the interpreter data structures.
 # - The price to pay: serialization of tasks, arguments, and results.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Weighted mean and Variance
 #
 # ### Exercise 6.1
@@ -168,7 +184,7 @@ np.average( x, weights=p)
 var =np.sum(p*x**2) - np.average( x, weights=p)**2
 var
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Wordcount
 
 # +
@@ -211,7 +227,7 @@ def reducer( item ):
 
 
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 #
 # ## Parallel map
 #
@@ -232,12 +248,12 @@ with ProcessPoolExecutor() as e:
     _ = e.map(process_name, range(mp.cpu_count()))
 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 6.2
 #
 # - Modify the mapper function by adding this print.
+# -
 
-# +
 def mapper(filename):
     " split text to list of key/value pairs (word,1)"
     
@@ -251,7 +267,7 @@ def mapper(filename):
 
 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Parallel reduce
 #
 # - For parallel reduce operation, data must be aligned in a container. We already created a `partitioner` function that returns this container.
@@ -266,7 +282,7 @@ from concurrent.futures import ProcessPoolExecutor
 
 def wordcount(files):
     
-    with ProcessPoolExecutor() as e:
+    with ThreadPoolExecutor() as e:
     
         mapped_values = e.map(mapper, files)
         partioned_values = partitioner(chain(*mapped_values))
@@ -279,7 +295,7 @@ def wordcount(files):
 files = glob("sample*.txt")  
 wordcount(files)    
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Increase volume of data
 #
 # *Due to the proxy, code above is not runnable on workstations*
@@ -299,7 +315,7 @@ soup = BeautifulSoup(home_content, "lxml")
 author_page_links = soup.find_all("a")
 author_pages = [ap["href"] for i, ap in enumerate(author_page_links) if i < 49]
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Generate html links
 #
 # - Create a list of all links pointing to Latin texts. The Latin Library uses a special format which makes it easy to find the corresponding links: All of these links contain the name of the text author.
@@ -316,7 +332,7 @@ for path, content in zip(author_pages, ap_content):
     book_links += ([link for link in ap_soup.find_all("a", {"href": True}) if author_name in link["href"]])
 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Download webpages content
 
 # + {"slideshow": {"slide_type": "slide"}}
@@ -334,30 +350,30 @@ for i, bl in enumerate(book_links[:num_pages]):
         print("Unable to retrieve " + bl["href"] + ".")
         continue
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Extract data files
 #
 # - I already put the content of pages in files named book-*.txt
 # - You can extract data from the archive by running the cell below
 #
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # ```py
 # import os  # library to get directory and file paths
 # import tarfile # this module makes possible to read and write tar archives
 #
 # def extract_data():
-#     datadir = os.path.join('..','data','latinbooks')
+#     datadir = os.path.join('data','latinbooks')
 #     if not os.path.exists(datadir):
 #        print("Extracting data...")
-#        tar_path = os.path.join('..','data', 'latinbooks.tgz')
+#        tar_path = os.path.join('data', 'latinbooks.tgz')
 #        with tarfile.open(tar_path, mode='r:gz') as books:
-#           books.extractall('../data')
+#           books.extractall('data')
 #             
-# extract_data() # this function call will extract text files in ../data/latinbooks
+# extract_data() # this function call will extract text files in data/latinbooks
 # ```
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Read data files
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -369,7 +385,7 @@ for file in files:
         text = f.read()
     texts.append(text)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Extract the text from html and split the text at periods to convert it into sentences.
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -391,7 +407,7 @@ for i, text in enumerate(texts):
 print(sentences[0])
 print(sentences[-1])
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 6.4
 #
 # Parallelize this last process using `concurrent.futures`.
@@ -399,7 +415,7 @@ print(sentences[-1])
 # +
 # %%time
 from bs4 import BeautifulSoup
-from concurrent.futures import ProcessPoolExecutor as pool
+from concurrent.futures import ThreadPoolExecutor as pool
 
 def sentence_mapper(text):
     sentences = list()
@@ -423,7 +439,7 @@ sentences = reduce(add, mapped_sentences )
 print(sentences[0])
 print(sentences[-1])
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## References
 #
 # - [Using Conditional Random Fields and Python for Latin word segmentation](https://medium.com/@felixmohr/using-python-and-conditional-random-fields-for-latin-word-segmentation-416ca7a9e513)

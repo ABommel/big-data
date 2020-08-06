@@ -2,19 +2,20 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,../src//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.5.2
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: big-data
 #     language: python
-#     name: python3
+#     name: big-data
 # ---
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Dask
 #
 # *[Dask](http://dask.pydata.org) is a flexible parallel computing library for analytic computing* written in Python. Dask is similar to Spark, by lazily constructing directed acyclic graph (DAG) of tasks and splitting large datasets into small portions called partitions. See the below image from [Dask's web page](http://dask.pydata.org) for illustration. 
@@ -29,7 +30,7 @@
 #
 # While it can work on a [distributed cluster](http://dask.pydata.org/en/latest/distributed.html), Dask works also very well on a single cpu machine. 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Dask DataFrames
 #
 # Dask dataframes look and feel (mostly) like Pandas dataframes but they run on the same infrastructure that powers dask.delayed.
@@ -45,7 +46,7 @@
 #
 # We will use `dask.dataframe` construct our computations for us.  The `dask.dataframe.read_csv` function can take a globstring like `"data/nycflights/*.csv"` and build parallel computations on all of our data at once.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Prep the Data
 
 # + {"slideshow": {"slide_type": "slide"}}
@@ -60,22 +61,22 @@ import tarfile # this module makes possible to read and write tar archives
 
 def extract_flight():
     here = os.getcwd()
-    flightdir = os.path.join(here,'..','data', 'nycflights')
+    flightdir = os.path.join(here,'data', 'nycflights')
     if not os.path.exists(flightdir):
        print("Extracting flight data")
-       tar_path = os.path.join('..','data', 'nycflights.tar.gz')
+       tar_path = os.path.join('data', 'nycflights.tar.gz')
        with tarfile.open(tar_path, mode='r:gz') as flights:
-          flights.extractall('../data/')
+          flights.extractall('data/')
             
 extract_flight() # this function call will extract 10 csv files in data/nycflights
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Load Data from CSVs in Dask Dataframes
 
 # + {"slideshow": {"slide_type": "fragment"}}
 import os
 here = os.getcwd()
-filename = os.path.join(here, '..', 'data', 'nycflights', '*.csv')
+filename = os.path.join(here, 'data', 'nycflights', '*.csv')
 filename
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -85,7 +86,7 @@ import dask.dataframe as dd
 df = dd.read_csv(filename,
                  parse_dates={'Date': [0, 1, 2]})
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # Let's take a look to the dataframe
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -103,7 +104,7 @@ try:
 except Exception:
     traceback.print_exc()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### What just happened?
 #
 # Unlike `pandas.read_csv` which reads in the entire file before inferring datatypes, `dask.dataframe.read_csv` only reads in a sample from the beginning of the file (or first file if using a glob). These inferred datatypes are then enforced when reading all partitions.
@@ -129,22 +130,22 @@ df = dd.read_csv(filename,
 # + {"slideshow": {"slide_type": "slide"}}
 df.tail()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # Let's take a look at one more example to fix ideas.
 
 # + {"slideshow": {"slide_type": "fragment"}}
 len(df)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Why df is ten times longer ?
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # - Dask investigated the input path and found that there are ten matching files. 
 # - A set of jobs was intelligently created for each chunk - one per original CSV file in this case. 
 # - Each file was loaded into a pandas dataframe, had `len()` applied to it.
 # - The subtotals were combined to give you the final grant total.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Computations with `dask.dataframe`
 #
 # We compute the maximum of the `DepDelay` column.  With `dask.delayed` we could create this computation as follows:
@@ -164,7 +165,7 @@ len(df)
 # + {"slideshow": {"slide_type": "fragment"}}
 # %time df.DepDelay.max().compute()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # This writes the delayed computation for us and then runs it. Recall that the delayed computation is a dask graph made of up of key-value pairs.
 #
 # Some things to note:
@@ -179,7 +180,7 @@ len(df)
 # + {"slideshow": {"slide_type": "slide"}}
 df.DepDelay.max().visualize()
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # If you are already familiar with the Pandas API then know how to use `dask.dataframe`.  There are a couple of small changes.
 #
 # As noted above, computations on dask `DataFrame` objects don't perform work, instead they build up a dask graph.  We can evaluate this dask graph at any time using the `.compute()` method.
@@ -221,10 +222,10 @@ result = df.DepDelay.mean()
 
 # ## Exercices
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # If you don't remember how to use pandas.  Please read [pandas documentation](http://pandas.pydata.org/).
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # ### Exercise 15.1
 #
 # - Use the `head()` method to get the first ten rows
@@ -244,7 +245,7 @@ len(df[df.DepDelay < 0])
 
 len(df[~df.Cancelled])
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # Divisions and the Index
 # ---------------------------
 #
@@ -263,14 +264,14 @@ df = dd.read_csv(filename,
                         'Cancelled': bool})
 df.divisions
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # However if we set the index to some new column then dask will divide our data roughly evenly along that column and create new divisions for us.  Warning, `set_index` triggers immediate computation.
 
 # + {"slideshow": {"slide_type": "fragment"}}
 df2 = df.set_index('Year')
 df2.divisions
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # We see here the minimum and maximum values (1990 and 1999) as well as the intermediate values that separate our data well.  This dataset has ten partitions, as the final value is assumed to be the inclusive right-side for the last bin.
 # -
 
@@ -278,7 +279,7 @@ df2.npartitions
 
 df2.head()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # One of the benefits of this is that operations like `loc` only need to load the relevant partitions
 # -
 
@@ -286,7 +287,7 @@ df2.loc[1991]
 
 df2.loc[1991].compute()
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # ### Exercises 15.2
 #
 # In this section we do a few `dask.dataframe` computations. If you are comfortable with Pandas then these should be familiar. You will have to think about when to call `compute`.
@@ -308,7 +309,7 @@ df[~df.Cancelled].groupby("Origin").Origin.count().compute()
 
 df[~df.Cancelled].groupby("Origin").DepDelay.count().compute()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Sharing Intermediate Results
 #
 # When computing all of the above, we sometimes did the same operation more than once. For most operations, `dask.dataframe` hashes the arguments, allowing duplicate computations to be shared, and only computed once.
@@ -320,7 +321,7 @@ non_cancelled = df[~df.Cancelled]
 mean_delay = non_cancelled.DepDelay.mean()
 std_delay = non_cancelled.DepDelay.std()
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # #### Using two calls to `.compute`:
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -328,14 +329,14 @@ std_delay = non_cancelled.DepDelay.std()
 mean_delay_res = mean_delay.compute()
 std_delay_res = std_delay.compute()
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # #### Using one call to `dask.compute`:
 
 # + {"slideshow": {"slide_type": "fragment"}}
 # %%time
 mean_delay_res, std_delay_res = dask.compute(mean_delay, std_delay)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # Using `dask.compute` takes roughly 1/2 the time. This is because the task graphs for both results are merged when calling `dask.compute`, allowing shared operations to only be done once instead of twice. In particular, using `dask.compute` only does the following once:
 #
 # - the calls to `read_csv`
@@ -346,6 +347,3 @@ mean_delay_res, std_delay_res = dask.compute(mean_delay, std_delay)
 
 # + {"slideshow": {"slide_type": "slide"}}
 dask.visualize(mean_delay, std_delay)
-# -
-
-

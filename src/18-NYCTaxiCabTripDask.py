@@ -5,12 +5,12 @@
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.5.2
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: big-data
 #     language: python
-#     name: python3
+#     name: big-data
 # ---
 
 # # Dask dataframes on HDFS
@@ -65,20 +65,16 @@ print(cluster.job_script())
 #
 
 # +
-import dask.dataframe as dd
-from distributed import Client, progress
-
-c = Client('127.0.0.1:8786')
-nyc2014 = dd.read_csv('hdfs://svmass2.mass.uhb.fr:54310/user/datasets/nyc-tlc/2014/yellow*.csv',
-parse_dates=['pickup_datetime', 'dropoff_datetime'],
-skipinitialspace=True)
-
-nyc2015 = dd.read_csv('hdfs://svmass2.mass.uhb.fr:54310/user/datasets/nyc-tlc/2015/yellow*.csv',
-parse_dates=['tpep_pickup_datetime', 'tpep_dropoff_datetime'])
-nyc2014, nyc2015 = c.persist([nyc2014, nyc2015])
-
-progress(nyc2014, nyc2015)
-# -
-
-
-
+# import dask.dataframe as dd
+# from distributed import Client, progress
+# 
+# c = Client('127.0.0.1:8786')
+# nyc2014 = dd.read_csv('hdfs://svmass2.mass.uhb.fr:54310/user/datasets/nyc-tlc/2014/yellow*.csv',
+# parse_dates=['pickup_datetime', 'dropoff_datetime'],
+# skipinitialspace=True)
+# 
+# nyc2015 = dd.read_csv('hdfs://svmass2.mass.uhb.fr:54310/user/datasets/nyc-tlc/2015/yellow*.csv',
+# parse_dates=['tpep_pickup_datetime', 'tpep_dropoff_datetime'])
+# nyc2014, nyc2015 = c.persist([nyc2014, nyc2015])
+# 
+# progress(nyc2014, nyc2015)

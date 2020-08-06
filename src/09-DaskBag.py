@@ -1,19 +1,20 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,../src//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.5.2
 #   kernelspec:
 #     display_name: big-data
 #     language: python
 #     name: big-data
 # ---
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Dask bag
 #
 # Dask proposes "big data" collections with a small set of high-level primitives like `map`, `filter`, `groupby`, and `join`.  With these common patterns we can often handle computations that are more complex than map, but are still structured.
@@ -62,7 +63,7 @@ b.topk
 b.product(b).compute() # Cartesian product of each pair 
 # of elements in two sequences (or the same sequence in this case)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # Chain operations to construct more complex computations
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -74,7 +75,7 @@ b.product(b).compute() # Cartesian product of each pair
 
 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Daily stock example
 #
 # Let's use the bag interface to read the json files containing time series.
@@ -99,15 +100,15 @@ def extract_data(name, where):
        with tarfile.open(tar_path, mode='r:gz') as data:
           data.extractall(where)
             
-extract_data('daily-stock','../data') # this function call will extract json files
+extract_data('daily-stock','data') # this function call will extract json files
 # -
 
-# %ls ../data/daily-stock/*.json
+# %ls data/daily-stock/*.json
 
 # + {"slideshow": {"slide_type": "fragment"}}
 import dask.bag as db
 import json
-stocks = db.read_text('../data/daily-stock/*.json')
+stocks = db.read_text('data/daily-stock/*.json')
 
 # + {"slideshow": {"slide_type": "fragment"}}
 stocks.npartitions
@@ -127,11 +128,14 @@ import pandas as pd
 import json
 
 here = os.getcwd() # get the current directory
-filenames = sorted(glob(os.path.join(here,'..','data', 'daily-stock', '*.json')))
+filenames = sorted(glob(os.path.join(here,'data', 'daily-stock', '*.json')))
 filenames
+# -
+
+# %rm data/daily-stock/*.h5
 
 # + {"slideshow": {"slide_type": "slide"}}
-from tqdm import tqdm_notebook as tqdm
+from tqdm.notebook import tqdm
 for fn in tqdm(filenames):
     with open(fn) as f:
         data = [json.loads(line) for line in f]
@@ -142,10 +146,10 @@ for fn in tqdm(filenames):
     df.to_hdf(out_filename, '/data')
 
 # + {"slideshow": {"slide_type": "slide"}}
-filenames = sorted(glob(os.path.join(here,'..','data', 'daily-stock', '*.h5')))
+filenames = sorted(glob(os.path.join(here,'data', 'daily-stock', '*.h5')))
 filenames
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Serial version
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -166,7 +170,7 @@ for a in filenames:    # Doubly nested loop over the same collection
 
 a, b, corr
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Dask.bag methods
 #
 # We can construct most of the above computation with the following dask.bag methods:
@@ -197,7 +201,7 @@ result = corr.compute()
 # + {"slideshow": {"slide_type": "fragment"}}
 result
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Wordcount with Dask bag
 
 # +
@@ -218,10 +222,6 @@ for i in range(20):
 import glob
 glob.glob('sample*.txt')
 
-str.
-
-
-
 # + {"slideshow": {"slide_type": "fragment"}}
 import dask.bag as db
 import glob
@@ -238,13 +238,13 @@ wordcount = (b.str.replace(".","")  # remove dots
 
 wordcount.compute() # Run all tasks and return result
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Genome example
 # We will use a Dask bag to calculate the frequencies of sequences of five bases, and then sort the sequences into descending order ranked by their frequency.
 #
 # - First we will define some functions to split the bases into sequences of a certain size
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # ### Exercise 9.1
 #
 # - Implement a function `group_characters(line, n=5)` to group `n` characters together and return a iterator. `line` is a text line in genome.txt file.
@@ -332,10 +332,9 @@ for c in Reverse(alphabet):
     
 for c in reverse(alphabet):
     print(c, end="")
+
+
 # -
-
-
-
 def group_character( line, n=5):
     bases = ''
     for i, b in enumerate(line):
@@ -353,15 +352,14 @@ for seq in group_character(line, 5):
 def group_and_split( line, n):
     return [seq for seq in group_character(line,n)]
 
-# %ls ../data
 
-
+# %ls data
 
 # +
 import os
 from glob import glob
 
-data_path = os.path.join("..","data")
+data_path = os.path.join("data")
 with open(os.path.join(data_path,"genome.txt")) as g:
     data = g.read()
     for i in range(8):
@@ -369,14 +367,14 @@ with open(os.path.join(data_path,"genome.txt")) as g:
         with open(file,"w") as f:
             f.write(data)
 
-glob("../data/genome0*.txt")
+glob("data/genome0*.txt")
 
 # +
 from operator import itemgetter
 
 import dask.bag as db
 
-b = db.read_text("../data/genome0*.txt")
+b = db.read_text("data/genome0*.txt")
 
 result = (b.filter(lambda line: not line.startswith(">"))
   .map(lambda line: line.strip())
@@ -390,21 +388,19 @@ result.visualize()
 
 result.compute()
 
-
-
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 9.2
 #
 # The [FASTA](http://www.cbs.dtu.dk/services/NetGene2/fasta.php) file format is used to write several genome sequences.
 #
 # - Create a function that can read a [FASTA file](../data/nucleotide-sample.txt) and compute the frequencies for n = 5 of a given sequence.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 9.3
 #
 # Write a program that uses the function implemented above to read several FASTA files stored in a Dask bag.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Some remarks about bag
 #
 # *  Higher level dask collections include functions for common patterns

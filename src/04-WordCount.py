@@ -2,26 +2,20 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,../src//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.5.2
 #   kernelspec:
 #     display_name: big-data
 #     language: python
 #     name: big-data
 # ---
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
-# Some recommendations:
-# - *Don't google too much, ask me or use the python documentation through `help` function.*
-# - *Do not try to find a clever or optimized solution, do something that works before.*
-# - *Please don't get the solution from your colleagues*
-# - *Notebooks will be updated next week with solutions*
-
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Wordcount
 #
 # - [Wikipedia](https://en.wikipedia.org/wiki/Word_count)
@@ -30,7 +24,14 @@
 # - Word count is commonly used by translators to determine the price for the translation job.
 # - This is the "Hello World" program of Big Data.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
+# Some recommendations:
+# - *Don't google too much, ask me or use the python documentation through `help` function.*
+# - *Do not try to find a clever or optimized solution, do something that works before.*
+# - *Please don't get the solution from your colleagues*
+# - *Notebooks will be updated next week with solutions*
+
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Create sample text file
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -40,7 +41,7 @@ with open("sample.txt", "w") as f:
     for i in range(10000):
         f.write(text())
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 4.1
 #
 # Write a python program that counts the number of lines, words and characters in that file.
@@ -80,7 +81,7 @@ s = set(words)
 s
 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 4.2
 #
 # Create a function called `map_words` that take a file name as argument and return a lists containing all words as items.
@@ -102,7 +103,7 @@ def map_words(filename):
 
 map_words("sample.txt")[:5]
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Sorting a dictionary by value
 #
 # By default, if you use `sorted` function on a `dict`, it will use keys to sort it.
@@ -115,14 +116,14 @@ fruits = [('apple', 3), ('banana', 2), ('pear', 5), ('orange', 1)]
 getcount = operator.itemgetter(1)
 dict(sorted(fruits, key=getcount))
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # `sorted` function has also a `reverse` optional argument.
 
 # + {"slideshow": {"slide_type": "fragment"}}
 dict(sorted(fruits, key=getcount, reverse=True))
 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 4.3
 #
 # Create a function `reduce` to reduce the list of words returned by `map_words` and return a dictionary containing all words as keys and number of occurrences as values.
@@ -168,10 +169,10 @@ def reduce(sorted_words):
 
 reduce(map_words("sample.txt"))
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # You probably notice that this simple function is not easy to implement. Python standard library provides some features that can help.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Container datatypes
 #
 # `collection` module implements specialized container datatypes providing alternatives to Python’s general purpose built-in containers, `dict`, `list`, `set`, and `tuple`.
@@ -179,7 +180,7 @@ reduce(map_words("sample.txt"))
 # - `defaultdict` :	dict subclass that calls a factory function to supply missing values
 # - `Counter`	: dict subclass for counting hashable objects
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## defaultdict
 #
 # When you implement the `wordcount` function you probably had some problem to append key-value pair to your `dict`. If you try to change the value of a key that is not present 
@@ -197,7 +198,7 @@ for k, v in s:
 
 dict(d)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 4.4
 #
 # - Modify the `reduce` function you wrote above by using a defaultdict with the most suitable factory.
@@ -215,7 +216,7 @@ def reduce(sorted_words):
 
 reduce(map_words("sample.txt"))
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Counter
 #
 # A Counter is a dict subclass for counting hashable objects. It is an unordered collection where elements are stored as dictionary keys and their counts are stored as dictionary values. Counts are allowed to be any integer value including zero or negative counts.
@@ -240,7 +241,7 @@ cnt.most_common(2)
 # + {"slideshow": {"slide_type": "fragment"}}
 cnt.values()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 4.5
 #
 # Use a `Counter` object to count words occurences in the sample text file. 
@@ -260,10 +261,10 @@ def wordcounter(filename):
 
 wordcounter("sample.txt")
 
-# + {"slideshow": {"slide_type": "fragment"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # The Counter class is similar to bags or multisets in some Python libraries or other languages. We will see later how to use Counter-like objects in a parallel context. 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Process multiple files
 #
 # - Create several files containing `lorem` text named 'sample01.txt', 'sample02.txt'...
@@ -278,7 +279,7 @@ vegetables = [('endive', 2), ('spinach', 1), ('celery', 5), ('carrot', 4)]
 getcount = operator.itemgetter(1)
 dict(sorted(itertools.chain(fruits,vegetables), key=getcount))
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 4.6
 #
 # - Write the program that creates files, processes and use `itertools.chain` to get the merged word count dictionary.
@@ -313,7 +314,7 @@ from glob import glob
 reduce(chain(*[map_words(file) for file in glob("sample0*.txt")]))
 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 4.7
 #
 # - Create the `wordcount` function in order to accept several files as arguments and
