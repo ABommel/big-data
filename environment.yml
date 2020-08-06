@@ -2,14 +2,19 @@ name: big-data
 channels:
   - conda-forge
 dependencies:
+  - beautifulsoup4
   - bokeh
   - dask
   - dask-jobqueue
   - feather-format
   - findspark
+  - h5py
   - jupytext
   - lorem
   - lxml
+  - pandas
   - pyarrow
   - pytables
   - python-graphviz
+  - seaborn
+  - toolz
