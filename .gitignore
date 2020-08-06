@@ -4,8 +4,8 @@
 notebooks/mydask.png
 *.html
 notebooks/*.txt
-data/nycflights/
-data/daily-stock/
+notebooks/data/nycflights/
+notebooks/data/daily-stock/
 notebooks/nycflights
 *.parquet
 *.feather
