@@ -1,22 +1,23 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,../src//py
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.3.1
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
 #     name: python3
 # ---
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # <img src="images/dask_logo.jpg">
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Dask Features
 #
 # - process data that doesn't fit into memory by breaking it into blocks and specifying task chains
@@ -29,7 +30,7 @@
 import dask
 import dask.multiprocessing
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Define two slow functions
 
 # + {"slideshow": {"slide_type": "fragment"}}
@@ -50,7 +51,7 @@ x = slowinc(1)
 y = slowinc(2)
 z = slowadd(x, y)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Parallelize with dask.delayed
 #
 # - Functions wrapped by `dask.delayed` don't run immediately, but instead put those functions and arguments into a task graph. 
@@ -68,7 +69,7 @@ z = delayed(slowadd)(x, y)
 # %%time
 z.compute()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Dask graph
 #
 # - Contains description of the calculations necessary to produce the result. 
@@ -77,7 +78,7 @@ z.compute()
 # + {"slideshow": {"slide_type": "fragment"}}
 z.visualize()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Parallelize a loop
 #
 
@@ -94,7 +95,7 @@ for x in data:
 total = sum(results)
 total
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 8.1
 #
 # - Parallelize this by appending the delayed `slowinc` calls to the list `results`.
@@ -117,7 +118,7 @@ total.visualize()
 
 # %time total.compute()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Decorator
 #
 # It is also common to see the delayed function used as a decorator. Same example:
@@ -140,7 +141,7 @@ y = slowinc(2)
 z = slowadd(x, y)
 z.compute()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Control flow
 # -  Delay only some functions, running a few of them immediately. This is helpful when those functions are fast and help us to determine what other slower functions we should call. 
 # - In the example below we iterate through a list of inputs. If that input is even then we want to call `half`. If the input is odd then we want to call `odd_process`. This iseven decision to call `half` or `odd_process` has to be made immediately (not lazily) in order for our graph-building Python code to proceed.
@@ -166,7 +167,7 @@ def is_even(x):
 data = [randint(0,100) for i in range(8)]
 data
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 8.2
 # - Parallelize the sequential code above using dask.delayed
 # - You will need to delay some functions, but not all
@@ -185,7 +186,7 @@ for x in data:
 total = delayed(sum)(results)
 total.visualize()
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 8.3
 # - Parallelize the hdf5 conversion from json files
 # - Create a function `convert_to_hdf`
@@ -215,7 +216,7 @@ import pandas as pd
 import json
 
 here = os.getcwd() # get the current directory
-filenames = sorted(glob(os.path.join(here,'..','data', 'daily-stock', '*.json')))
+filenames = sorted(glob(os.path.join(here,'../data', 'daily-stock', '*.json')))
 
 # + {"slideshow": {"slide_type": "slide"}}
 from tqdm.notebook import tqdm 
@@ -261,3 +262,5 @@ for filename in filenames:
 # -
 
 # %time dask.compute(*results)
+
+
