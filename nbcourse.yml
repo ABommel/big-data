@@ -2,6 +2,7 @@ title: Python tools for big data
 slug_title: big-data-python
 subtitle: Master de Mathématiques Appliquées, Statistique
 favicon: notebooks/images/favicon.ico
+output_dir: docs
 book:
   file: big-data.pdf
 picture:
