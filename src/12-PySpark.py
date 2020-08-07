@@ -1,21 +1,4 @@
 # -*- coding: utf-8 -*-
-# ---
-# jupyter:
-#   jupytext:
-#     cell_metadata_json: true
-#     formats: ipynb,../src//py
-#     text_representation:
-#       extension: .py
-#       format_name: light
-#       format_version: '1.5'
-#       jupytext_version: 1.5.2
-#   kernelspec:
-#     display_name: big-data
-#     language: python
-#     name: big-data
-# ---
-
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # PySpark
 #
 # ![Logo](images/apache_spark_logo.png)
@@ -25,13 +8,11 @@
 # - Spark is written in [Scala](https://www.scala-lang.org).
 # - All images come from [Databricks](https://databricks.com/product/getting-started-guide).
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # - Apache Spark is a fast and general-purpose cluster computing system. 
 # - It provides high-level APIs in Java, Scala, Python and R, and an optimized engine that supports general execution graphs.
 # - Spark can manage "big data" collections with a small set of high-level primitives like `map`, `filter`, `groupby`, and `join`.  With these common patterns we can often handle computations that are more complex than map, but are still structured.
 # - It also supports a rich set of higher-level tools including [Spark SQL](https://spark.apache.org/docs/latest/sql-programming-guide.html) for SQL and structured data processing, [MLlib](https://spark.apache.org/docs/latest/ml-guide.html) for machine learning, [GraphX](https://spark.apache.org/docs/latest/graphx-programming-guide.html) for graph processing, and Spark Streaming.
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Resilient distributed datasets
 #
 # - The fundamental abstraction of Apache Spark is a read-only, parallel, distributed, fault-tolerent collection called a resilient distributed datasets (RDD).
@@ -43,21 +24,18 @@
 # - RDDs automatically rebuilt on machine failure.
 #
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Lifecycle of a Spark Program
 # 1. Create some input RDDs from external data or parallelize a collection in your driver program.
 # 2. Lazily transform them to define new RDDs using transformations like `filter()` or `map()`
 # 3. Ask Spark to cache() any intermediate RDDs that will need to be reused.
 # 4. Launch actions such as count() and collect() to kick off a parallel computation, which is then optimized and executed by Spark.
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Operations on Distributed Data
 # - Two types of operations: **transformations** and **actions**
 # - Transformations are *lazy* (not computed immediately) 
 # - Transformations are executed when an action is run
 #
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # [Transformations](https://spark.apache.org/docs/latest/rdd-programming-guide.html#transformations) (lazy)
 # ```spark
 # map() flatMap()
@@ -78,7 +56,6 @@
 # ...
 # ```
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # [Actions](https://spark.apache.org/docs/latest/rdd-programming-guide.html#actions)
 #
 # ```
@@ -97,15 +74,15 @@
 # foreach()
 # ```
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # PySpark
 #
 #
 # PySpark uses Py4J that enables Python programs to dynamically access Java objects.
 #
-# ![PySpark Internals](http://i.imgur.com/YlI8AqEl.png)
+# ![PySpark Internals](images/YlI8AqEl.png)
+#
+# Source: http://i.imgur.com/YlI8AqEl.png
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## The `SparkContext` class
 #
 # - When working with Apache Spark we invoke methods on an object which is an instance of the `pyspark.SparkContext` context.
@@ -115,14 +92,11 @@
 # - The `parallelize` method in `SparkContext` can be used to turn any ordinary Python collection into an RDD;
 #     - normally we would create an RDD from a large file or an HBase table. 
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## First example
 #
 # PySpark isn't on sys.path by default, but that doesn't mean it can't be used as a regular library. You can address this by either symlinking pyspark into your site-packages, or adding pyspark to sys.path at runtime. [findspark](https://github.com/minrk/findspark) does the latter.
 
-# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # We have a spark context sc to use with a tiny local spark cluster with 4 nodes (will work just fine on a multicore machine).
-# -
 
 # If you use the workstation in room A111 run the code below before:
 #
@@ -144,18 +118,13 @@ import pyspark
 
 sc = pyspark.SparkContext(master="local[4]", appName="FirstExample")
 
-# + {"slideshow": {"slide_type": "fragment"}}
 print(sc) # it is like a Pool Processor executor
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Create your first RDD
 
-# + {"slideshow": {"slide_type": "fragment"}}
 rdd = sc.parallelize(list(range(8))) # create collection
 
-# + {"slideshow": {"slide_type": "fragment"}}
 rdd
-# -
 
 # ### Exercise
 #
@@ -168,15 +137,16 @@ with open("sample.txt","w") as f:
     f.write(lorem.text())
     
 rdd = sc.textFile("sample.txt")
+# -
 
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Collect
 #
 # Action / To Driver: Return all items in the RDD to the driver in a single list
 #
-# ![](http://i.imgur.com/DUO6ygB.png)
-# -
+# ![](images/DUO6ygB.png)
+#
+# Source: https://i.imgur.com/DUO6ygB.png
 
 # ### Exercise 
 #
@@ -184,17 +154,16 @@ rdd = sc.textFile("sample.txt")
 
 rdd.collect()
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Map
 #
 # Transformation / Narrow: Return a new RDD by applying a function to each element of this RDD
 #
-# ![](http://i.imgur.com/PxNJf0U.png)
+# ![](images/PxNJf0U.png)
+#
+# Source: http://i.imgur.com/PxNJf0U.png
 
-# + {"slideshow": {"slide_type": "fragment"}}
 rdd = sc.parallelize(list(range(8)))
 rdd.map(lambda x: x ** 2).collect() # Square each element
-# -
 
 # ### Exercise
 #
@@ -209,28 +178,27 @@ def square(x):
 # %time rdd.map(square).collect()
 
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
+# -
+
 # ### Filter
 #
 # Transformation / Narrow: Return a new RDD containing only the elements that satisfy a predicate
 #
-# ![](http://i.imgur.com/GFyji4U.png)
+# ![](images/GFyji4U.png)
+# Source: http://i.imgur.com/GFyji4U.png
 
-# + {"slideshow": {"slide_type": "fragment"}}
 # Select only the even elements
 rdd.filter(lambda x: x % 2 == 0).collect()
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### FlatMap
 #
 # Transformation / Narrow: Return a new RDD by first applying a function to all elements of this RDD, and then flattening the results
 #
-# ![](http://i.imgur.com/TsSUex8.png)
+# ![](images/TsSUex8.png)
+# Source: http://i.imgur.com/TsSUex8.png
 
-# + {"slideshow": {"slide_type": "fragment"}}
 rdd = sc.parallelize([1,2,3])
 rdd.flatMap(lambda x: (x, x*100, 42)).collect()
-# -
 
 # ### Exercise
 #
@@ -238,113 +206,104 @@ rdd.flatMap(lambda x: (x, x*100, 42)).collect()
 
 
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### GroupBy
 #
 # Transformation / Wide: Group the data in the original RDD. Create pairs where the key is the output of a user function, and the value is all items for which the function yields this key.
 #
-# ![](http://i.imgur.com/gdj0Ey8.png)
+# ![](images/gdj0Ey8.png)
+# Source: http://i.imgur.com/gdj0Ey8.png
 
-# + {"slideshow": {"slide_type": "fragment"}}
 rdd = sc.parallelize(['John', 'Fred', 'Anna', 'James'])
 rdd = rdd.groupBy(lambda w: w[0])
 [(k, list(v)) for (k, v) in rdd.collect()]
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### GroupByKey
 #
 # Transformation / Wide: Group the values for each key in the original RDD. Create a new pair where the original key corresponds to this collected group of values.
 #
-# ![](http://i.imgur.com/TlWRGr2.png)
+# ![](images/TlWRGr2.png)
+# Source: http://i.imgur.com/TlWRGr2.png
 
-# + {"slideshow": {"slide_type": "fragment"}}
 rdd = sc.parallelize([('B',5),('B',4),('A',3),('A',2),('A',1)])
 rdd = rdd.groupByKey()
 [(j[0], list(j[1])) for j in rdd.collect()]
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Join
 #
 # Transformation / Wide: Return a new RDD containing all pairs of elements having the same key in the original RDDs
 #
-# ![](http://i.imgur.com/YXL42Nl.png)
+# ![](images/YXL42Nl.png)
+# Source: http://i.imgur.com/YXL42Nl.png
 
-# + {"slideshow": {"slide_type": "fragment"}}
 x = sc.parallelize([("a", 1), ("b", 2)])
 y = sc.parallelize([("a", 3), ("a", 4), ("b", 5)])
 x.join(y).collect()
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Distinct
 #
 # Transformation / Wide: Return a new RDD containing distinct items from the original RDD (omitting all duplicates)
 #
-# ![](http://i.imgur.com/Vqgy2a4.png)
+# ![](images/Vqgy2a4.png)
+# Source: http://i.imgur.com/Vqgy2a4.png
 
-# + {"slideshow": {"slide_type": "fragment"}}
 rdd = sc.parallelize([1,2,3,3,4])
 rdd.distinct().collect()
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### KeyBy
 #
 # Transformation / Narrow: Create a Pair RDD, forming one pair for each item in the original RDD. The pair’s key is calculated from the value via a user-supplied function.
 #
-# ![](http://i.imgur.com/nqYhDW5.png)
+# ![](images/nqYhDW5.png)
+# Source: http://i.imgur.com/nqYhDW5.png
 
-# + {"slideshow": {"slide_type": "fragment"}}
 rdd = sc.parallelize(['John', 'Fred', 'Anna', 'James'])
 rdd.keyBy(lambda w: w[0]).collect()
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Actions
 #
 # ### Map-Reduce operation 
 #
 # Action / To Driver: Aggregate all the elements of the RDD by applying a user function pairwise to elements and partial results, and return a result to the driver
 #
-# ![](http://i.imgur.com/R72uzwX.png)
+# ![](images/R72uzwX.png)
+# Source: http://i.imgur.com/R72uzwX.png
 
-# + {"slideshow": {"slide_type": "fragment"}}
 from operator import add
 rdd = sc.parallelize(list(range(8)))
 rdd.map(lambda x: x ** 2).reduce(add) # reduce is an action!
-# -
 
 # ### Max, Min, Sum, Mean, Variance, Stdev
 #
 # Action / To Driver: Compute the respective function (maximum value, minimum value, sum, mean, variance, or standard deviation) from a numeric RDD
 #
-# ![](http://i.imgur.com/HUCtib1.png)
+# ![](images/HUCtib1.png)
+# Source: http://i.imgur.com/HUCtib1.png
 
 # ### CountByKey
 #
 # Action / To Driver: Return a map of keys and counts of their occurrences in the RDD
 #
-# ![](http://i.imgur.com/jvQTGv6.png)
+# ![](images/jvQTGv6.png)
+# Source: http://i.imgur.com/jvQTGv6.png
 
 # +
 rdd = sc.parallelize([('J', 'James'), ('F','Fred'), 
                     ('A','Anna'), ('J','John')])
 
 rdd.countByKey()
+# -
 
-# + {"slideshow": {"slide_type": "fragment"}}
 # Stop the local spark cluster
 sc.stop()
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 10.1 Word-count in Apache Spark
 
-# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # - Write the sample text file
 
-# + {"slideshow": {"slide_type": "fragment"}}
 from lorem import text
 with open('sample.txt','w') as f:
     f.write(text())
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 #
 # - Create the rdd with `SparkContext.textFile method`
 # - lower, remove dots and split using `rdd.flatMap`
@@ -371,7 +330,6 @@ rdd = sc.textFile("sample.txt")
 
 sc.stop()
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # SparkSession
 #
 # Since SPARK 2.0.0,  SparkSession provides a single point 
@@ -391,7 +349,7 @@ sc.stop()
 #
 # See [this tutorial](https://computing.llnl.gov/tutorials/parallel_comp/#ExamplesPI).
 
-# + {"slideshow": {"slide_type": "fragment"}}
+# +
 import sys
 from random import random
 from operator import add
@@ -415,8 +373,8 @@ count = spark.sparkContext.parallelize(range(1, n+1), partitions).map(f).reduce(
 print("Pi is roughly %f" % (4.0 * count / n))
 
 spark.stop()
+# -
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 9.2
 #
 # Using the same method than the PI computation example, compute the integral
@@ -425,14 +383,12 @@ spark.stop()
 # $$
 # You can check your result with numpy
 
-# + {"slideshow": {"slide_type": "fragment"}}
 # numpy evaluates solution using numeric computation. 
 # It uses discrete values of the function
 import numpy as np
 x = np.linspace(0,1,1000)
 np.trapz(np.exp(-x*x),x)
 
-# + {"slideshow": {"slide_type": "fragment"}}
 # numpy and scipy evaluates solution using numeric computation. It uses discrete values
 # of the function
 import numpy as np
@@ -440,7 +396,6 @@ from scipy.integrate import quad
 quad(lambda x: np.exp(-x*x), 0, 1)
 # note: the solution returned is complex 
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Correlation between daily stock
 #
 # - Data preparation
@@ -472,7 +427,7 @@ filenames
 
 # %rm data/daily-stock/*.h5
 
-# + {"slideshow": {"slide_type": "slide"}}
+# +
 from glob import glob
 import os, json
 import pandas as pd
@@ -488,10 +443,9 @@ for fn in filenames:
     print("Finished : %s" % out_filename.split(os.path.sep)[-1])
 
 filenames = sorted(glob(os.path.join('data', 'daily-stock', '*.h5')))  # data/json/*.json
-
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
-# ### Sequential code
 # -
+
+# ### Sequential code
 
 filenames
 
@@ -501,7 +455,7 @@ with pd.HDFStore('data/daily-stock/aet.h5') as hdf:
 
 df_test = pd.read_hdf('data/daily-stock/aet.h5')
 
-# + {"slideshow": {"slide_type": "fragment"}}
+# +
 # %%time
 
 series = []
@@ -517,12 +471,11 @@ for a in series:    # Doubly nested loop over the same collection
 
 result = max(results)
 result
+# -
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 9.3
 #
 # Parallelize the code above with Apache Spark.
-# -
 
 # - Change the filenames because of the Hadoop environment.
 
@@ -551,11 +504,10 @@ corr = (series.cartesian(series)
               .max())
 
 corr
+# -
 
-# + [markdown] {"slideshow": {"slide_type": "fragment"}}
 # Computation time is slower because there is a lot of setup, workers creation, there is a lot of communications the correlation function is too small
 
-# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise 9.4 Fasta file example
 #
 # Use a RDD to calculate the GC content of fasta file nucleotide-sample.txt:
@@ -563,7 +515,6 @@ corr
 # $$\cfrac{G+C}{A+T+G+C}\times100%$$
 #
 # Create a rdd from fasta file genome.txt in data directory and count 'G' and 'C' then divide by the total number of bases.
-# -
 
 genome = sc.textFile('data/genome.txt')
 

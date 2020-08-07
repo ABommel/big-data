@@ -17,7 +17,9 @@
 # + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Map
 #
-# ![domain decomposition](https://computing.llnl.gov/tutorials/parallel_comp/images/domain_decomp.gif)
+# ![domain decomposition](images/domain_decomp.png)
+#
+# credits: https://computing.llnl.gov/tutorials/parallel_comp
 
 # + [markdown] {"slideshow": {"slide_type": "slide"}}
 #
@@ -46,6 +48,7 @@ print(*res)
 
 # + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ![MapReduce](images/mapreduce.jpg)
+#
 
 # + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## `functools.reduce` example

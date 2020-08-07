@@ -2,28 +2,29 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.4
+#       format_version: '1.5'
+#       jupytext_version: 1.5.2
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: big-data
 #     language: python
-#     name: python3
+#     name: big-data
 # ---
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Big Data
 #
 # - Data sets that are so large or complex that traditional data processing application software is inadequate to deal with them. 
 # - Data analysis requires massively parallel software running on several servers.
 # - **Volume, Variety, Velocity, Variability and Veracity** describe Big Data properties.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ![https://github.com/veekaybee/data-lake-talk/](images/bigdata.png)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ![Hadoop Logo](images/hadoop.png)
 #
 # - Framework for running applications on large cluster. 
@@ -32,7 +33,7 @@
 # - It provides a distributed file system (HDFS) that stores data on the compute nodes, providing very high aggregate bandwidth across the cluster.
 # - Both MapReduce and the **Hadoop Distributed File System** are designed so that node failures are automatically handled by the framework.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # HDFS
 # * It is a distributed file systems.
 # * HDFS is highly fault-tolerant and is designed to be deployed on low-cost hardware.
@@ -49,7 +50,7 @@
 # * Files in HDFS are write-once and have strictly one writer at any time.
 # * The DataNode has no knowledge about HDFS files. 
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Accessibility
 #
 # All [HDFS commands](http://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/FileSystemShell.html)  are invoked by the bin/hdfs Java script:
@@ -66,7 +67,7 @@
 # hdfs dfs -cat /foodir/myfile.txt #View the contents of a file named /foodir/myfile.txt	
 # ```
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Transfer between nodes
 #
 # ## put
@@ -89,12 +90,12 @@
 # - `copyFromLocal` : source is restricted to a local file
 # - `copyToLocal` : destination is restricted to a local file
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ![hdfs blocks](images/hdfs-fonctionnement.jpg)
 #
 # The Name Node is not in the data path. The Name Node only provides the map of where data is and where data should go in the cluster (file system metadata).
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Cluster Hadoop
 #
 # - 8 computers: sve1 -> sve9
@@ -117,7 +118,7 @@
 # - http://svpe8.mass.uhb.fr:50075/
 # - http://svpe9.mass.uhb.fr:50075/
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # To do following hands on you can switch to [JupyterLab](https://jupyterlab.readthedocs.io).
 #
 # Just go to this following address http://localhost:9000/lab
@@ -139,7 +140,7 @@
 # echo `date` >> user.txt 
 # cat user.txt
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # Copy it on  HDFS :
 # ```bash
 # hdfs dfs -put user.txt
@@ -159,7 +160,7 @@
 # + {"language": "bash"}
 # hdfs dfs -cat user.txt
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # Remove the file:
 # ```bash
 # hdfs dfs -rm user.txt
@@ -202,7 +203,7 @@
 # 12. Display the help of `df` command and show the total amount of space available in the filesystem in a human-readable fashion.
 # 13. With `chmod` change the rights of `today.txt` file. I has to be readable and writeable only by you.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # YARN
 #
 # *YARN takes care of resource management and job scheduling/monitoring.*
@@ -218,10 +219,10 @@
 #
 #
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ![Yarn in Hadoop documentation](http://hadoop.apache.org/docs/stable/hadoop-yarn/hadoop-yarn-site/yarn_architecture.gif)
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Yarn Web Interface
 #
 # The JobTracker web UI provides information about general job statistics of the Hadoop cluster, running/completed/failed jobs and a job history log file. It also gives access to the ‘‘local machine’s’’ Hadoop log files (the machine on which the web UI is running on).
@@ -229,7 +230,7 @@
 #  - All Applications http://svmass2.mass.uhb.fr:8088
 #  
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## WordCount Example 
 #
 # The [Worcount example](https://wiki.apache.org/hadoop/WordCount) is implemented in Java and it is the example of [Hadoop MapReduce Tutorial](https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html)
@@ -243,7 +244,7 @@ for i in range(1,10):
     with open('sample{0:02d}.txt'.format(i), 'w') as f:
         f.write(text())
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # - Make input directory in your HDFS home directory required to execute MapReduce jobs:
 # ```bash
 # hdfs dfs -mkdir -p /user/${USER}/input
@@ -251,7 +252,7 @@ for i in range(1,10):
 #
 # `-p` flag force the directory creation even if it already exists.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### Exercise
 #
 # - Copy all necessary files in HDFS system.
@@ -269,7 +270,7 @@ for i in range(1,10):
 #
 # - Connect to the [Yarn web user interface](http://svmass2.mass.uhb.fr:8088/cluster) and read the logs carefully.
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 #
 # ## Deploying the MapReduce Python code on Hadoop
 #
@@ -277,7 +278,7 @@ for i in range(1,10):
 #
 #
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Map 
 #
 # The following Python code read data from sys.stdin, split it into words and output a list of lines mapping words to their (intermediate) counts to sys.stdout. For every word it outputs <word> 1 tuples immediately. 
@@ -301,7 +302,7 @@ for line in sys.stdin:
         # tab-delimited; the trivial word count is 1
         print (f'{word}\t 1')
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # The python script must be executable:
 #     
 # ```bash
@@ -310,7 +311,7 @@ for line in sys.stdin:
 #
 # Try to run in a terminal with:
 # ```bash
-# # cat sample01.txt | ./mapper.py | sort
+# # # cat sample01.txt | ./mapper.py | sort
 # ```
 # or
 # ```bash
@@ -321,7 +322,7 @@ for line in sys.stdin:
 # chmod +x mapper.py
 # cat sample01.txt | ./mapper.py | sort
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # # Reduce 
 #
 # The following code reads the results of mapper.py and sum the occurrences of each word to a final count, and then output its results to sys.stdout.
@@ -368,7 +369,7 @@ for line in sys.stdin:
 if current_word == word:
     print (f'{current_count}\t{current_word}')
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # As mapper the python script must be executable:
 #     
 # ```bash
@@ -377,7 +378,7 @@ if current_word == word:
 #
 # Try to run in a terminal with:
 # ```bash
-# # cat sample.txt | ./mapper.py | sort | ./reducer.py | sort
+# # # cat sample.txt | ./mapper.py | sort | ./reducer.py | sort
 # ```
 # or
 # ```bash
@@ -389,7 +390,7 @@ if current_word == word:
 # chmod +x reducer.py 
 # ./mapper.py < sample01.txt | sort | ./reducer.py | sort
 
-# + {"slideshow": {"slide_type": "slide"}, "cell_type": "markdown"}
+# + [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Execution on Hadoop cluster
 #
 # * Copy all files to HDFS cluster

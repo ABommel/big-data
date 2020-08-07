@@ -129,19 +129,9 @@ import sys, subprocess
 import os
 import findspark
 
-if sys.platform == "darwin":
-    os.environ["JAVA_HOME"] = str(subprocess.check_output(['/usr/libexec/java_home']))
-    os.environ["SPARK_HOME"] = "/usr/local/opt/apache-spark/libexec"
-    os.environ["PYSPARK_PYTHON"] = sys.executable
-
+os.environ["PYSPARK_PYTHON"] = sys.executable
 findspark.init()
 # -
-
-from pyspark.sql  import SparkSession
-spark = SparkSession.builder \
-     .master("local") \
-     .appName("Irmar People") \
-     .getOrCreate()
 
 from pyspark import SparkContext, SparkConf, SQLContext
 # The following three lines are not necessary
@@ -160,7 +150,7 @@ df.show(24)
 #
 # In this exercise, let's explore schema inference. We're going to be using a file called `irmar.txt`. The data is structured, but it has no self-describing schema. And, it's not JSON, so Spark can't infer the schema automatically. Let's create an RDD and look at the first few rows of the file.
 
-rdd = sc.textFile("../data/irmar.csv")
+rdd = sc.textFile("data/irmar.csv")
 for line in rdd.take(10):
   print(line)
 
@@ -183,7 +173,7 @@ for line in rdd.take(10):
 # +
 from collections import namedtuple
 
-rdd = sc.textFile("../data/irmar.csv")
+rdd = sc.textFile("data/irmar.csv")
 
 Person = namedtuple('Person', ['name', 'phone', 'office', 'organization', 
                                'position', 'hdr', 'team1', 'team2'])
@@ -340,5 +330,3 @@ df3.withColumn("total", df3.count1+df3.count2).orderBy("total", ascending=False)
 
 
 sc.stop()
-
-
