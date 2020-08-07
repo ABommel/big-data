@@ -14,4 +14,4 @@ RUN conda env create --quiet -f environment.yml && \
     conda run -n big-data python -m ipykernel install --name big-data && \
     conda clean --all -f -y && \
     fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER && \
+    fix-permissions /home/$NB_USER
