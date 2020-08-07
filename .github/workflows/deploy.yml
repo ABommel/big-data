@@ -18,7 +18,6 @@ jobs:
     - uses: goanpeca/setup-miniconda@v1
       with:
         miniconda-version: "latest"
-        activate-environment: base
     - name: Bash
       shell: bash -l {0}
       run: |
