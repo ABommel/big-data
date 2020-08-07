@@ -17,6 +17,7 @@ jobs:
         ssh-private-key: ${{ secrets.NBCOURSE_PRIV }}
     - uses: goanpeca/setup-miniconda@v1
       with:
+        miniconda-version: "latest"
         activate-environment: big-data
         environment-file: environment.yml
     - name: Bash
