@@ -19,7 +19,17 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - uses: goanpeca/setup-miniconda@v1
+    - name: Download Apache Spark
+      uses: wei/wget@v1
+      with:
+        args: https://downloads.apache.org/spark/spark-3.0.0/spark-3.0.0-bin-hadoop2.7.tgz
+    - name: Install Apache Spark
+      run: tar zxf spark-3.0.0-bin-hadoop2.7.tgz
+    - uses: Actions-R-Us/default-env@v1
+      env:
+        SPARK_HOME: '/home/runner/spark-3.0.0-bin-hadoop2.7'
+    - name: Install Miniconda
+      uses: goanpeca/setup-miniconda@v1
       with:
         miniconda-version: "latest"
         activate-environment: big-data
