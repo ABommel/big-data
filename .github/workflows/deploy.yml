@@ -17,14 +17,16 @@ jobs:
         ssh-private-key: ${{ secrets.NBCOURSE_PRIV }}
     - uses: goanpeca/setup-miniconda@v1
       with:
-        miniconda-version: "latest"
+        activate-environment: big-data
         environment-file: environment.yml
+        python-version: 3.8
+        auto-activate-base: false
     - name: Bash
       shell: bash -l {0}
       run: |
         conda run -n big-data python -m ipykernel install --user --name big-data
-        python -m pip install nbcourse
-        nbcourse -n 1
+        conda run -n base python -m pip install nbcourse
+        conda run -n base nbcourse -n 1
     - name: Build and Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
