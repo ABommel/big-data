@@ -6,8 +6,9 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    steps:
     - name: Install pandoc
-      run: sudo apt-get install -y pandoc texlive-xetex texlive-fonts-extra texlive-math-extra
+      run: sudo apt-get install -y pandoc texlive-xetex texlive-fonts-extra
     - name: Checkout
       uses: actions/checkout@v2
       with:
