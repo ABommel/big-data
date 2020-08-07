@@ -34,13 +34,13 @@ jobs:
         miniconda-version: "latest"
         activate-environment: big-data
         environment-file: environment.yml
-    - name: Bash
+    - name: Run nbcourse
       shell: bash -l {0}
       run: |
         conda run -n big-data python -m ipykernel install --user --name big-data
         conda run -n base python -m pip install nbcourse
         conda run -n base nbcourse -n 1
-    - name: Build and Deploy
+    - name: Deploy on github
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         SSH: true
