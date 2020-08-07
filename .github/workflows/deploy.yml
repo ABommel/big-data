@@ -5,7 +5,7 @@ on:
       - master
 jobs:
   build-and-deploy:
-    runs-on: jupyter/pyspark
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -15,7 +15,13 @@ jobs:
       uses: webfactory/ssh-agent@v0.2.0
       with:
         ssh-private-key: ${{ secrets.NBCOURSE_PRIV }}
-    - run: |
+    - uses: goanpeca/setup-miniconda@v1
+      with:
+        miniconda-version: "latest"
+        activate-environment: base
+    - name: Bash
+      shell: bash -l {0}
+      run: |
         conda env create
         conda run -n big-data python -m ipykernel install --user --name big-data
         pip install nbcourse
