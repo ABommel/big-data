@@ -10,6 +10,7 @@ dependencies:
   - feather-format
   - findspark
   - h5py
+  - ipykernel
   - ipywidgets
   - jupytext
   - lorem
