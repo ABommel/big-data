@@ -18,10 +18,10 @@ jobs:
     - uses: goanpeca/setup-miniconda@v1
       with:
         miniconda-version: "latest"
+        environment-file: environment.yml
     - name: Bash
       shell: bash -l {0}
       run: |
-        conda env create
         conda run -n big-data python -m ipykernel install --user --name big-data
         python -m pip install nbcourse
         nbcourse -n 1
