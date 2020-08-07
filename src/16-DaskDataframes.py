@@ -20,7 +20,7 @@
 #
 # *[Dask](http://dask.pydata.org) is a flexible parallel computing library for analytic computing* written in Python. Dask is similar to Spark, by lazily constructing directed acyclic graph (DAG) of tasks and splitting large datasets into small portions called partitions. See the below image from [Dask's web page](http://dask.pydata.org) for illustration. 
 #
-# ![](http://dask.pydata.org/en/latest/_images/collections-schedulers.png) 
+# ![http://dask.pydata.org/en/latest/_images/collections-schedulers.png](images/collections-schedulers.png) 
 #
 # It has three main interfaces:
 #
