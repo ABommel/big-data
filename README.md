@@ -4,6 +4,8 @@ Notebooks for [Master of Data Science Rennes](https://www.sites.univ-rennes2.fr/
 
 [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/pnavaro/big-data/master)
 
+A [website](https://pnavaro.github.io/big-data) generated with [nbcourse](https://pypi.org/project/nbcourse/) is available.
+
 ## Run Jupyter notebooks with docker
 
 ### Get docker app
