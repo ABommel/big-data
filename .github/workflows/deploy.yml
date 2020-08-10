@@ -30,18 +30,20 @@ jobs:
     - uses: Actions-R-Us/default-env@v1
       env:
         SPARK_HOME: '/home/runner/spark-3.0.0-bin-hadoop2.7'
-    - name: Install Miniconda
+    - name: Install Miniconda and dependencies
       uses: goanpeca/setup-miniconda@v1
       with:
         miniconda-version: "latest"
         activate-environment: big-data
         environment-file: environment.yml
-    - name: Run nbcourse
+    - name: Install nbcourse
       shell: bash -l {0}
       run: |
         conda run -n big-data python -m ipykernel install --user --name big-data
         conda run -n base python -m pip install nbcourse
-        conda run -n base nbcourse -n 1
+    - name: Run nbcourse
+      shell: bash -l {0}
+      run: conda run -n base nbcourse -n 1
     - name: Deploy on github
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
