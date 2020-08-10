@@ -49,25 +49,25 @@ jobs:
     - name: Look for the bug
       shell: bash -l {0}
       run: |
-        conda run -n base jupyter-nbconvert --to pdf build/01-GitBasics.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/02-Installation.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/03-JupyterQuickStart.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/04-WordCount.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/05-MapReduce.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/06-ParallelComputation.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/07-AsynchronousProcessing.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/08-DaskDelayed.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/09-DaskBag.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/10-PandasSeries.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/11-PandaDataframes.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/12-PySpark.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/13-UnixCommands.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/14-Hadoop.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/15-HadoopFileFormats.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/16-DaskDataframes.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/17-SparkDataFrames.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/18-NYCTaxiCabTripDask.ipynb
-        conda run -n base jupyter-nbconvert --to pdf build/19-NYCTaxiCabTripSpark.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/01-GitBasics.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/02-Installation.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/03-JupyterQuickStart.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/04-WordCount.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/05-MapReduce.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/06-ParallelComputation.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/07-AsynchronousProcessing.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/08-DaskDelayed.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/09-DaskBag.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/10-PandasSeries.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/11-PandaDataframes.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/12-PySpark.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/13-UnixCommands.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/14-Hadoop.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/15-HadoopFileFormats.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/16-DaskDataframes.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/17-SparkDataFrames.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/18-NYCTaxiCabTripDask.ipynb
+        conda run -n base jupyter nbconvert --to pdf build/19-NYCTaxiCabTripSpark.ipynb
     - name: Deploy on github
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
