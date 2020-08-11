@@ -46,14 +46,6 @@ jobs:
     - name: Run nbcourse
       shell: bash -l {0}
       run: conda run -n base nbcourse -n 1
-    - name: Look for the bug
-      shell: bash -l {0}
-      run: |
-        cd build
-        conda run -n base jupyter nbconvert --to pdf 12-PySpark.ipynb
-        conda run -n base jupyter nbconvert --to latex 12-PySpark.ipynb
-        cat 12-PySpark.tex
-        cd -
     - name: Deploy on github
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
