@@ -17,4 +17,4 @@ big-data
 .cache/matplotlib/fontlist-v310.json
 notebooks/book-*.dat
 .doit.db
-docs
+build
