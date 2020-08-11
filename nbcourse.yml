@@ -4,7 +4,7 @@ subtitle: Master de Mathématiques Appliquées, Statistique
 favicon: notebooks/images/favicon.ico
 output_dir: build
 book:
-  file: big-data.pdf
+  file: big-data-python.pdf
 picture:
     path: images/logoR2-Noir.png
     width: 300px
