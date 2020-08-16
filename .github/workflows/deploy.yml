@@ -10,7 +10,7 @@ jobs:
     - name: Install pandoc
       run: |
         sudo apt-get -yq update
-        sudo apt-get install -yq pandoc texlive-xetex texlive-fonts-extra
+        sudo apt-get install -yq pandoc texlive-xetex texlive-fonts-extra graphviz
     - name: Checkout
       uses: actions/checkout@v2
       with:
