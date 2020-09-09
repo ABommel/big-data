@@ -47,6 +47,7 @@ docker run --rm -v $PWD/big-data:/home/jovyan/ -p 8888:8888 -p 4040:4040 pnavaro
   	   * [Parallelizing Scientific Python with Dask](https://youtu.be/mbfsog3e5DA), SciPy 2017 Tutorial by James Crist.
   	   * [Parallel Python: Analyzing Large Datasets Intermediate](https://www.youtube.com/watch?v=5Md_sSsN51k), SciPy 2016 Tutorial by Matthew Rocklin.
   	   * [Parallel Data Analysis in Python](https://www.youtube.com/watch?v=a8gpcnmggiU), SciPy 2017 Tutorial by Matthew Rocklin, Ben Zaitlen & Aron Ahmadia.
+       * [Matthew Rocklin - Streaming Processing with Dask](https://www.youtube.com/watch?v=yI_yZoUaz60)
   - Hadoop
   	   * [Writing an Hadoop MapReduce Program in Python](http://www.michael-noll.com/tutorials/writing-an-hadoop-mapreduce-program-in-python/) by Michael G. Noll.
   - Spark
